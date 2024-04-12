@@ -1,0 +1,33 @@
+name: Super-Linter
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  super-linter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Super Linter
+        uses: super-linter/super-linter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_BASH: false # no diy bash files in project
+          VALIDATE_BASH_EXEC: false # no diy bash files in project
+          VALIDATE_GOOGLE_JAVA_FORMAT: false # no formatter extension for vscode
+          FILTER_REGEX_EXCLUDE: .*MavenWrapperDownloader.java # not a diy file
+          VALIDATE_SHELL_SHFMT: false # no diy shell scripts
+          VALIDATE_MARKDOWN: false # no diy markdown files
