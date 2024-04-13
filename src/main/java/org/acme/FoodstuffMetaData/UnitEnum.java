@@ -1,4 +1,4 @@
-package org.acme.IngredientMetaData;
+package org.acme.FoodstuffMetaData;
 
 public enum UnitEnum {
     /**
@@ -21,6 +21,7 @@ public enum UnitEnum {
 
     /**
      * Constructor.
+     * 
      * @param newUnit unit to set.
      */
     private UnitEnum(final String newUnit) { // needs to be private for some reason

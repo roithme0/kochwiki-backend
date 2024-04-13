@@ -17,7 +17,8 @@ public class RecipeResource implements PanacheRepository<Recipe> {
     /**
      * Patch a recipe with the given updates.
      * Update all fields except id.
-     * @param recipe the recipe to patch
+     * 
+     * @param recipe  the recipe to patch
      * @param updates the updates to apply
      * @return patched recipe
      */
@@ -51,8 +52,8 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                     for (LinkedHashMap<String, Object> amountMap : amountsList) {
                         Integer index = (Integer) amountMap.get("index");
                         Float amount = ((Integer) amountMap.get("amount")).floatValue();
-                        Long ingredientId = ((Integer) amountMap.get("ingredientId")).longValue();
-                        Amount newAmount = new Amount(index, amount, ingredientId);
+                        Long foodstuffId = ((Integer) amountMap.get("foodstuffId")).longValue();
+                        Amount newAmount = new Amount(index, amount, foodstuffId);
                         newAmounts.add(newAmount);
                     }
                     recipe.setAmounts(newAmounts);

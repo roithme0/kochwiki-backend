@@ -1,12 +1,13 @@
-package org.acme.IngredientMetaData;
+package org.acme.FoodstuffMetaData;
 
 import java.util.Map;
 import java.util.HashMap;
 
-public class IngredientMetaData {
+public class FoodstuffMetaData {
 
     /**
-     * @return Key value pairs of the verbose names and names of the ingredient fields.
+     * @return Key value pairs of the verbose names and names of the foodstuff
+     *         fields.
      */
     public static Map<String, String> getVerboseNames() {
         Map<String, String> verboseNames = new HashMap<>();
