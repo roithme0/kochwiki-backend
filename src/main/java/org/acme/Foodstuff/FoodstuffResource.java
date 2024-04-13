@@ -1,4 +1,4 @@
-package org.acme.Ingredient;
+package org.acme.Foodstuff;
 
 import java.util.Map;
 
@@ -9,50 +9,51 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class IngredientResource implements PanacheRepository<Ingredient> {
+public class FoodstuffResource implements PanacheRepository<Foodstuff> {
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = Logger.getLogger(IngredientService.class);
+    private static final Logger LOG = Logger.getLogger(FoodstuffService.class);
 
     /**
-     * Patch an ingredient with the given updates.
+     * Patch an foodstuff with the given updates.
      * Update all fields except id.
-     * @param ingredient ingredient to patch
-     * @param updates updates to apply
-     * @return patched ingredient
+     * 
+     * @param foodstuff foodstuff to patch
+     * @param updates   updates to apply
+     * @return patched foodstuff
      */
-    public Ingredient patch(final Ingredient ingredient, final Map<String, Object> updates) {
+    public Foodstuff patch(final Foodstuff foodstuff, final Map<String, Object> updates) {
         LOG.debug("updates: " + updates);
         for (Map.Entry<String, Object> entry : updates.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             switch (key) {
                 case "name":
-                    ingredient.name = (String) value;
+                    foodstuff.name = (String) value;
                     break;
                 case "brand":
-                    ingredient.brand = (String) value;
+                    foodstuff.brand = (String) value;
                     break;
                 case "unit":
-                    ingredient.setUnit((String) value);
+                    foodstuff.setUnit((String) value);
                     break;
                 case "kcal":
-                    ingredient.kcal = (Integer) value;
+                    foodstuff.kcal = (Integer) value;
                     break;
                 case "carbs":
-                    ingredient.carbs = (Integer) value;
+                    foodstuff.carbs = (Integer) value;
                     break;
                 case "protein":
-                    ingredient.protein = (Integer) value;
+                    foodstuff.protein = (Integer) value;
                     break;
                 case "fat":
-                    ingredient.fat = (Integer) value;
+                    foodstuff.fat = (Integer) value;
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown field '" + key + "'");
             }
         }
-        return ingredient;
+        return foodstuff;
     }
 }

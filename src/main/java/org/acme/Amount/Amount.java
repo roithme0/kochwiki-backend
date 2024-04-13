@@ -10,14 +10,14 @@ import jakarta.persistence.ManyToOne;
 // import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Column;
 
-import org.acme.Ingredient.Ingredient;
+import org.acme.Foodstuff.Foodstuff;
 import org.acme.Recipe.Recipe;
 
 @Entity
 // unique constraints prevented updating recipes
 // @Table(uniqueConstraints = {
 // @UniqueConstraint(columnNames = {"index", "recipe_id"}),
-// @UniqueConstraint(columnNames = {"ingredient_id", "recipe_id"})
+// @UniqueConstraint(columnNames = {"foodstuff_id", "recipe_id"})
 // })
 public class Amount extends PanacheEntity {
     /**
@@ -36,18 +36,18 @@ public class Amount extends PanacheEntity {
     public Integer index;
 
     /**
-     * Amount of the ingredient in the recipe.
+     * Amount of the foodstuff in the recipe.
      */
     @Column(nullable = false, length = MAX_AMOUNT)
     public Float amount;
 
     /**
-     * Ingredient of the amount.
+     * foodstuff of the amount.
      */
     @ManyToOne
     @JoinColumn
-    @JsonBackReference("amount-ingredient")
-    public Ingredient ingredient;
+    @JsonBackReference("amount-foodstuff")
+    public Foodstuff foodstuff;
 
     /**
      * Recipe the amount is used in.
@@ -58,10 +58,10 @@ public class Amount extends PanacheEntity {
     public Recipe recipe;
 
     /**
-     * @return id of referenced ingredient.
+     * @return id of referenced foodstuff.
      */
-    public Long getIngredientId() {
-        return ingredient.id;
+    public Long getFoodstuffId() {
+        return foodstuff.id;
     }
 
     /**
@@ -74,6 +74,7 @@ public class Amount extends PanacheEntity {
     /**
      * Set index of the amount.
      * Validate new index.
+     * 
      * @param newIndex new index to set.
      */
     public void setIndex(final Integer newIndex) {
@@ -81,14 +82,16 @@ public class Amount extends PanacheEntity {
         final int maxIndex = 99;
 
         if (newIndex < minIndex || newIndex > maxIndex) {
-            throw new IllegalArgumentException(String.format("Wert muss zwischen %d und %d liegen.", minIndex, maxIndex));
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minIndex, maxIndex));
         }
         index = newIndex;
     }
 
     /**
-     * Set amount of the ingredient in the recipe.
+     * Set amount of the foodstuff in the recipe.
      * Validate new amount.
+     * 
      * @param newAmount new amount to set.
      */
     public void setAmount(final Float newAmount) {
@@ -96,35 +99,39 @@ public class Amount extends PanacheEntity {
         final int maxAmount = 999;
 
         if (newAmount < minAmount || newAmount > maxAmount) {
-            throw new IllegalArgumentException(String.format("Wert muss zwischen %d und %d liegen.", minAmount, maxAmount));
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minAmount, maxAmount));
         }
         amount = newAmount;
     }
 
     /**
-     * Set ingredient of the amount.
-     * @param newIngredient new ingredient to set.
+     * Set foodstuff of the amount.
+     * 
+     * @param newFoodstuff new foodstuff to set.
      */
-    public void setIngredient(final Ingredient newIngredient) {
-        ingredient = newIngredient;
-        ingredient.addAmount(this);
+    public void setFoodstuff(final Foodstuff newFoodstuff) {
+        foodstuff = newFoodstuff;
+        foodstuff.addAmount(this);
     }
 
     /**
-     * Set id of the ingredient of the amount.
-     * Check if ingredient exists.
-     * @param ingredientId id of new ingredient to set.
+     * Set id of the foodstuff of the amount.
+     * Check if foodstuff exists.
+     * 
+     * @param foodstuffId id of new foodstuff to set.
      */
-    public void setIngredientId(final Long ingredientId) {
-        Ingredient newIngredient = Ingredient.findById(ingredientId);
-        if (newIngredient == null) {
-            throw new IllegalArgumentException("Ingredient with id " + ingredientId + " does not exist");
+    public void setFoodstuffId(final Long foodstuffId) {
+        Foodstuff newFoodstuff = Foodstuff.findById(foodstuffId);
+        if (newFoodstuff == null) {
+            throw new IllegalArgumentException("Foodstuff with id " + foodstuffId + " does not exist");
         }
-        setIngredient(newIngredient);
+        setFoodstuff(newFoodstuff);
     }
 
     /**
      * Set recipe using the amount.
+     * 
      * @param newRecipe new recipe to set.
      */
     public void setRecipe(final Recipe newRecipe) {
@@ -139,16 +146,17 @@ public class Amount extends PanacheEntity {
 
     /**
      * Constructor.
-     * @param paramIndex index of the amount.
-     * @param paramAmount amount of the ingredient in the recipe.
-     * @param paramIngredientId id of the ingredient of the amount.
+     * 
+     * @param paramIndex       index of the amount.
+     * @param paramAmount      amount of the foodstuff in the recipe.
+     * @param paramFoodstuffId id of the foodstuff of the amount.
      */
     public Amount(
             final Integer paramIndex,
             final Float paramAmount,
-            final Long paramIngredientId) {
+            final Long paramFoodstuffId) {
         this.setIndex(paramIndex);
         this.setAmount(paramAmount);
-        this.setIngredientId(paramIngredientId);
+        this.setFoodstuffId(paramFoodstuffId);
     }
 }
