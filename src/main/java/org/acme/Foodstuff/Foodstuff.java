@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.UniqueConstraint;
 
-import org.acme.Amount.Amount;
 import org.acme.FoodstuffMetaData.UnitEnum;
+import org.acme.Ingredient.Ingredient;
 
 import java.util.List;
 import java.util.Objects;
@@ -99,12 +99,12 @@ public class Foodstuff extends PanacheEntity {
     public Integer fat;
 
     /**
-     * List of amounts the foodstuff is used in.
+     * List of ingredients the foodstuff is used in.
      */
     @OneToMany(mappedBy = "foodstuff", fetch = FetchType.EAGER)
     @Column(nullable = true)
-    @JsonManagedReference("amount-foodstuff")
-    public List<Amount> amounts = new ArrayList<>();
+    @JsonManagedReference("ingredient-foodstuff")
+    public List<Ingredient> ingredients = new ArrayList<>();
 
     /**
      * @return name of unit of foodstuff.
@@ -227,12 +227,12 @@ public class Foodstuff extends PanacheEntity {
     }
 
     /**
-     * Add single amount to foodstuff.
+     * Add single ingredient to foodstuff.
      * 
-     * @param newAmount New amount to add.
+     * @param newIngredient New ingredient to add.
      */
-    public void addAmount(final Amount newAmount) {
-        amounts.add(newAmount);
+    public void addIngredient(final Ingredient newIngredient) {
+        ingredients.add(newIngredient);
     }
 
     /**

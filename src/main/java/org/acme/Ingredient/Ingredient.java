@@ -1,4 +1,4 @@
-package org.acme.Amount;
+package org.acme.Ingredient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -19,18 +19,18 @@ import org.acme.Recipe.Recipe;
 // @UniqueConstraint(columnNames = {"index", "recipe_id"}),
 // @UniqueConstraint(columnNames = {"foodstuff_id", "recipe_id"})
 // })
-public class Amount extends PanacheEntity {
+public class Ingredient extends PanacheEntity {
     /**
      * Max length for index.
      */
     private static final int MAX_INDEX = 2;
     /**
-     * Max length for amount.
+     * Max length for ingredient.
      */
     private static final int MAX_AMOUNT = 3;
 
     /**
-     * Index of the amount in the recipe.
+     * Index of the ingredient in the recipe.
      */
     @Column(nullable = false, length = MAX_INDEX)
     public Integer index;
@@ -42,19 +42,19 @@ public class Amount extends PanacheEntity {
     public Float amount;
 
     /**
-     * foodstuff of the amount.
+     * foodstuff of the ingredient.
      */
     @ManyToOne
     @JoinColumn
-    @JsonBackReference("amount-foodstuff")
+    @JsonBackReference("ingredient-foodstuff")
     public Foodstuff foodstuff;
 
     /**
-     * Recipe the amount is used in.
+     * Recipe the ingredient is used in.
      */
     @ManyToOne
     @JoinColumn
-    @JsonBackReference("recipe-amounts")
+    @JsonBackReference("recipe-ingredients")
     public Recipe recipe;
 
     /**
@@ -65,14 +65,14 @@ public class Amount extends PanacheEntity {
     }
 
     /**
-     * @return id of recipe using this amount.
+     * @return id of recipe using this ingredient.
      */
     public Long getRecipeId() {
         return recipe.id;
     }
 
     /**
-     * Set index of the amount.
+     * Set index of the ingredient.
      * Validate new index.
      * 
      * @param newIndex new index to set.
@@ -106,17 +106,17 @@ public class Amount extends PanacheEntity {
     }
 
     /**
-     * Set foodstuff of the amount.
+     * Set foodstuff of the ingredient.
      * 
      * @param newFoodstuff new foodstuff to set.
      */
     public void setFoodstuff(final Foodstuff newFoodstuff) {
         foodstuff = newFoodstuff;
-        foodstuff.addAmount(this);
+        foodstuff.addIngredient(this);
     }
 
     /**
-     * Set id of the foodstuff of the amount.
+     * Set id of the foodstuff of the ingredient.
      * Check if foodstuff exists.
      * 
      * @param foodstuffId id of new foodstuff to set.
@@ -130,7 +130,7 @@ public class Amount extends PanacheEntity {
     }
 
     /**
-     * Set recipe using the amount.
+     * Set recipe using the ingredient.
      * 
      * @param newRecipe new recipe to set.
      */
@@ -141,17 +141,17 @@ public class Amount extends PanacheEntity {
     /**
      * Default constructor for hibernate.
      */
-    public Amount() {
+    public Ingredient() {
     }
 
     /**
      * Constructor.
      * 
-     * @param paramIndex       index of the amount.
+     * @param paramIndex       index of the ingredient.
      * @param paramAmount      amount of the foodstuff in the recipe.
-     * @param paramFoodstuffId id of the foodstuff of the amount.
+     * @param paramFoodstuffId id of the foodstuff of the ingredient.
      */
-    public Amount(
+    public Ingredient(
             final Integer paramIndex,
             final Float paramAmount,
             final Long paramFoodstuffId) {

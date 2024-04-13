@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.acme.Amount.Amount;
+import org.acme.Ingredient.Ingredient;
 import org.acme.Step.Step;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -46,17 +46,17 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                 // break;
                 // case "image":
                 // break;
-                case "amounts":
-                    List<Amount> newAmounts = new ArrayList<Amount>();
-                    List<LinkedHashMap<String, Object>> amountsList = (List<LinkedHashMap<String, Object>>) value;
-                    for (LinkedHashMap<String, Object> amountMap : amountsList) {
-                        Integer index = (Integer) amountMap.get("index");
-                        Float amount = ((Integer) amountMap.get("amount")).floatValue();
-                        Long foodstuffId = ((Integer) amountMap.get("foodstuffId")).longValue();
-                        Amount newAmount = new Amount(index, amount, foodstuffId);
-                        newAmounts.add(newAmount);
+                case "ingredients":
+                    List<Ingredient> newIngredients = new ArrayList<Ingredient>();
+                    List<LinkedHashMap<String, Object>> ingredientsList = (List<LinkedHashMap<String, Object>>) value;
+                    for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
+                        Integer index = (Integer) ingredientMap.get("index");
+                        Float amount = ((Integer) ingredientMap.get("amount")).floatValue();
+                        Long foodstuffId = ((Integer) ingredientMap.get("foodstuffId")).longValue();
+                        Ingredient newIngredient = new Ingredient(index, amount, foodstuffId);
+                        newIngredients.add(newIngredient);
                     }
-                    recipe.setAmounts(newAmounts);
+                    recipe.setIngredients(newIngredients);
                     break;
                 case "steps":
                     List<Step> newSteps = new ArrayList<Step>();

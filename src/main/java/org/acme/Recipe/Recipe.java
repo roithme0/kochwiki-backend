@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
 
-import org.acme.Amount.Amount;
+import org.acme.Ingredient.Ingredient;
 import org.acme.Step.Step;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -71,24 +71,24 @@ public class Recipe extends PanacheEntity {
     public URL originUrl;
 
     // /**
-    //  * File containing the original recipe.
-    //  */
+    // * File containing the original recipe.
+    // */
     // @Column(nullable = true)
     // public File original;
 
     // /**
-    //  * Image of the recipe.
-    //  */
+    // * Image of the recipe.
+    // */
     // @Column(nullable = true)
     // public File image;
 
     /**
-     * List of amounts used in the recipe.
+     * List of ingredients used in the recipe.
      */
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
-    @JsonManagedReference("recipe-amounts")
-    public List<Amount> amounts = new ArrayList<>();
+    @JsonManagedReference("recipe-ingredients")
+    public List<Ingredient> ingredients = new ArrayList<>();
 
     /**
      * List of steps of the recipe.
@@ -101,6 +101,7 @@ public class Recipe extends PanacheEntity {
     /**
      * Set the number of servings of recipe.
      * Check for invalid values.
+     * 
      * @param newServings New number of servings.
      */
     public void setServings(final Integer newServings) {
@@ -108,7 +109,8 @@ public class Recipe extends PanacheEntity {
         final int maxServings = 99;
 
         if (newServings < minServings || newServings > maxServings) {
-            throw new IllegalArgumentException(String.format("Wert muss zwischen %d und %d liegen.", minServings, maxServings));
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minServings, maxServings));
         }
         servings = newServings;
     }
@@ -116,6 +118,7 @@ public class Recipe extends PanacheEntity {
     /**
      * Set preparation time of recipe.
      * Check for invalid values.
+     * 
      * @param newPreptime New preparation time in minutes.
      */
     public void setPreptime(final Integer newPreptime) {
@@ -126,7 +129,8 @@ public class Recipe extends PanacheEntity {
             return;
         }
         if (newPreptime < minPreptime || newPreptime > maxPreptime) {
-            throw new IllegalArgumentException(String.format("Wert muss zwischen %d und %d liegen.", minPreptime, maxPreptime));
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minPreptime, maxPreptime));
         }
         preptime = newPreptime;
     }
@@ -135,6 +139,7 @@ public class Recipe extends PanacheEntity {
      * Set url of origin of recipe.
      * Check for invalid values.
      * Convert to URL.
+     * 
      * @param newOriginUrl New URL of origin.
      */
     public void setOriginUrl(final String newOriginUrl) {
@@ -151,39 +156,43 @@ public class Recipe extends PanacheEntity {
     }
 
     /**
-     * Replace amounts used in recipe.
-     * @param newAmounts New list of amounts.
+     * Replace ingredients used in recipe.
+     * 
+     * @param newIngredients New list of ingredients.
      */
-    public void setAmounts(final List<Amount> newAmounts) {
-        List<Amount> oldAmounts = new ArrayList<>(amounts);
-        for (Amount amount : oldAmounts) {
-            this.removeAmount(amount);
+    public void setIngredients(final List<Ingredient> newIngredients) {
+        List<Ingredient> oldIngredients = new ArrayList<>(ingredients);
+        for (Ingredient ingredient : oldIngredients) {
+            this.removeIngredient(ingredient);
         }
-        for (Amount amount : newAmounts) {
-            addAmount(amount);
+        for (Ingredient ingredient : newIngredients) {
+            addIngredient(ingredient);
         }
     }
 
     /**
-     * Add single amount to recipe.
-     * @param newAmount New amount to add.
+     * Add single ingredient to recipe.
+     * 
+     * @param newIngredient New ingredient to add.
      */
-    public void addAmount(final Amount newAmount) {
-        amounts.add(newAmount);
-        newAmount.setRecipe(this);
+    public void addIngredient(final Ingredient newIngredient) {
+        ingredients.add(newIngredient);
+        newIngredient.setRecipe(this);
     }
 
     /**
-     * Remove single amount from recipe.
-     * @param amount Amount to remove.
+     * Remove single ingredient from recipe.
+     * 
+     * @param ingredient Ingredient to remove.
      */
-    public void removeAmount(final Amount amount) {
-        amounts.remove(amount);
-        amount.setRecipe(null);
+    public void removeIngredient(final Ingredient ingredient) {
+        ingredients.remove(ingredient);
+        ingredient.setRecipe(null);
     }
 
     /**
      * Replace steps of recipe.
+     * 
      * @param newSteps New list of steps.
      */
     public void setSteps(final List<Step> newSteps) {
@@ -198,6 +207,7 @@ public class Recipe extends PanacheEntity {
 
     /**
      * Add single step to recipe.
+     * 
      * @param newStep New step to add.
      */
     public void addStep(final Step newStep) {
@@ -207,6 +217,7 @@ public class Recipe extends PanacheEntity {
 
     /**
      * Remove single step from recipe.
+     * 
      * @param step Step to remove.
      */
     public void removeStep(final Step step) {
@@ -222,13 +233,14 @@ public class Recipe extends PanacheEntity {
 
     /**
      * Constructor for recipe.
-     * @param paramName Name of the recipe.
-     * @param paramServings Number of servings the recipe is for.
-     * @param paramPreptime Preparation time of the recipe in minutes.
-     * @param paramOriginName Name of the origin of the recipe.
-     * @param paramOriginUrl URL of the origin of the recipe.
-     * @param paramAmounts List of amounts used in the recipe.
-     * @param paramSteps List of steps of the recipe.
+     * 
+     * @param paramName        Name of the recipe.
+     * @param paramServings    Number of servings the recipe is for.
+     * @param paramPreptime    Preparation time of the recipe in minutes.
+     * @param paramOriginName  Name of the origin of the recipe.
+     * @param paramOriginUrl   URL of the origin of the recipe.
+     * @param paramIngredients List of ingredients used in the recipe.
+     * @param paramSteps       List of steps of the recipe.
      */
     public Recipe(
             final String paramName,
@@ -238,14 +250,14 @@ public class Recipe extends PanacheEntity {
             final String paramOriginUrl,
             // final File paramOriginal,
             // final File paramImage,
-            final List<Amount> paramAmounts,
+            final List<Ingredient> paramIngredients,
             final List<Step> paramSteps) {
         this.name = paramName;
         this.setServings(paramServings);
         this.setPreptime(paramPreptime);
         this.originName = paramOriginName;
         this.setOriginUrl(paramOriginUrl);
-        this.setAmounts(paramAmounts);
+        this.setIngredients(paramIngredients);
         this.setSteps(paramSteps);
     }
 }
