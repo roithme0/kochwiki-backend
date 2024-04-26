@@ -8,7 +8,9 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
 
+import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -42,9 +44,25 @@ public class FoodstuffService {
      */
     @GET
     @Path("/{id}")
-    public Foodstuff findById(@PathParam("id") final Long id) {
+    public Response findById(@PathParam("id") final Long id) {
         LOG.info("GET: find foodstuff with id '" + id + "' ...");
-        return foodstuffResource.findById(id);
+        try {
+            Foodstuff foodstuff = Foodstuff.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            return Response.ok(foodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error"))
+                    .build();
+        }
     }
 
     /**
@@ -69,7 +87,7 @@ public class FoodstuffService {
     @Transactional
     public Foodstuff patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
         LOG.info("PATCH: patching foodstuff with id '" + id + "' ...");
-        Foodstuff foodstuff = findById(id);
+        Foodstuff foodstuff = Foodstuff.findById(id);
         if (foodstuff == null) {
             throw new IllegalArgumentException("Foodstuff with id " + id + " does not exist");
         }
