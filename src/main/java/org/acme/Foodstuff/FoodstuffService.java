@@ -33,9 +33,17 @@ public class FoodstuffService {
      * @return list of all foodstuffs.
      */
     @GET
-    public List<Foodstuff> listAll() {
+    public Response listAll() {
         LOG.info("GET: listing all foodstuffs ...");
-        return foodstuffResource.listAll();
+        try {
+            return Response.ok(foodstuffResource.listAll()).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 
     /**
@@ -47,7 +55,7 @@ public class FoodstuffService {
     public Response findById(@PathParam("id") final Long id) {
         LOG.info("GET: find foodstuff with id '" + id + "' ...");
         try {
-            Foodstuff foodstuff = Foodstuff.findById(id);
+            Foodstuff foodstuff = foodstuffResource.findById(id);
             if (foodstuff == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
@@ -71,10 +79,18 @@ public class FoodstuffService {
      */
     @POST
     @Transactional
-    public Foodstuff create(final Foodstuff foodstuff) {
+    public Response create(final Foodstuff foodstuff) {
         LOG.info("POST: creating foodstuff '" + foodstuff.name + "' ...");
-        foodstuffResource.persist(foodstuff);
-        return foodstuff;
+        try {
+            foodstuffResource.persist(foodstuff);
+            return Response.ok(foodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 
     /**
@@ -88,7 +104,7 @@ public class FoodstuffService {
     public Response patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
         LOG.info("PATCH: patching foodstuff with id '" + id + "' ...");
         try {
-            Foodstuff foodstuff = Foodstuff.findById(id);
+            Foodstuff foodstuff = foodstuffResource.findById(id);
             if (foodstuff == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
@@ -118,7 +134,7 @@ public class FoodstuffService {
     public Response delete(@PathParam("id") final Long id) {
         LOG.info("DELETE: deleting foodstuff with id '" + id + "' ...");
         try {
-            Foodstuff foodstuff = Foodstuff.findById(id);
+            Foodstuff foodstuff = foodstuffResource.findById(id);
             if (foodstuff == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
