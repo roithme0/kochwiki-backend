@@ -8,7 +8,9 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
 
+import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -31,9 +33,17 @@ public class FoodstuffService {
      * @return list of all foodstuffs.
      */
     @GET
-    public List<Foodstuff> listAll() {
+    public Response listAll() {
         LOG.info("GET: listing all foodstuffs ...");
-        return foodstuffResource.listAll();
+        try {
+            return Response.ok(foodstuffResource.listAll()).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 
     /**
@@ -42,9 +52,25 @@ public class FoodstuffService {
      */
     @GET
     @Path("/{id}")
-    public Foodstuff findById(@PathParam("id") final Long id) {
+    public Response findById(@PathParam("id") final Long id) {
         LOG.info("GET: find foodstuff with id '" + id + "' ...");
-        return foodstuffResource.findById(id);
+        try {
+            Foodstuff foodstuff = foodstuffResource.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            return Response.ok(foodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 
     /**
@@ -53,10 +79,18 @@ public class FoodstuffService {
      */
     @POST
     @Transactional
-    public Foodstuff create(final Foodstuff foodstuff) {
+    public Response create(final Foodstuff foodstuff) {
         LOG.info("POST: creating foodstuff '" + foodstuff.name + "' ...");
-        foodstuffResource.persist(foodstuff);
-        return foodstuff;
+        try {
+            foodstuffResource.persist(foodstuff);
+            return Response.ok(foodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 
     /**
@@ -67,13 +101,26 @@ public class FoodstuffService {
     @PATCH
     @Path("/{id}")
     @Transactional
-    public Foodstuff patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
+    public Response patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
         LOG.info("PATCH: patching foodstuff with id '" + id + "' ...");
-        Foodstuff foodstuff = findById(id);
-        if (foodstuff == null) {
-            throw new IllegalArgumentException("Foodstuff with id " + id + " does not exist");
+        try {
+            Foodstuff foodstuff = foodstuffResource.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            Foodstuff updatedFoodstuff = foodstuffResource.patch(foodstuff, updates);
+            return Response.ok(updatedFoodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
         }
-        return foodstuffResource.patch(foodstuff, updates);
     }
 
     /**
@@ -84,9 +131,25 @@ public class FoodstuffService {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(@PathParam("id") final Long id) {
+    public Response delete(@PathParam("id") final Long id) {
         LOG.info("DELETE: deleting foodstuff with id '" + id + "' ...");
-        Foodstuff foodstuff = Foodstuff.findById(id);
-        foodstuff.delete();
+        try {
+            Foodstuff foodstuff = foodstuffResource.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            foodstuff.delete();
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 }

@@ -2,11 +2,13 @@ package org.acme.Step;
 
 import java.util.List;
 
+import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 
 @Path("/steps")
 public class StepService {
@@ -25,8 +27,16 @@ public class StepService {
      * @return all steps
      */
     @GET
-    public List<Step> findAll() {
+    public Response findAll() {
         LOG.info("GET: finding all steps ...");
-        return stepResource.listAll();
+        try {
+            return Response.ok(stepResource.listAll()).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 }
