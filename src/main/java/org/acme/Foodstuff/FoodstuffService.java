@@ -60,7 +60,7 @@ public class FoodstuffService {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                            "Unexpected error"))
+                            "Unexpected error: " + e.getMessage()))
                     .build();
         }
     }
@@ -85,13 +85,26 @@ public class FoodstuffService {
     @PATCH
     @Path("/{id}")
     @Transactional
-    public Foodstuff patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
+    public Response patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
         LOG.info("PATCH: patching foodstuff with id '" + id + "' ...");
-        Foodstuff foodstuff = Foodstuff.findById(id);
-        if (foodstuff == null) {
-            throw new IllegalArgumentException("Foodstuff with id " + id + " does not exist");
+        try {
+            Foodstuff foodstuff = Foodstuff.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            Foodstuff updatedFoodstuff = foodstuffResource.patch(foodstuff, updates);
+            return Response.ok(updatedFoodstuff).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
         }
-        return foodstuffResource.patch(foodstuff, updates);
     }
 
     /**
@@ -102,9 +115,25 @@ public class FoodstuffService {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(@PathParam("id") final Long id) {
+    public Response delete(@PathParam("id") final Long id) {
         LOG.info("DELETE: deleting foodstuff with id '" + id + "' ...");
-        Foodstuff foodstuff = Foodstuff.findById(id);
-        foodstuff.delete();
+        try {
+            Foodstuff foodstuff = Foodstuff.findById(id);
+            if (foodstuff == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Foodstuff with id " + id + " not found"))
+                        .build();
+            }
+            foodstuff.delete();
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
     }
 }
