@@ -84,19 +84,19 @@ public class Foodstuff extends PanacheEntity {
      * Nutritional value of the foodstuff.
      */
     @Column(nullable = true, length = MAX_LENGTH_CARBS)
-    public Double carbs;
+    public Float carbs;
 
     /**
      * Nutritional value of the foodstuff.
      */
     @Column(nullable = true, length = MAX_LENGTH_PROTEIN)
-    public Double protein;
+    public Float protein;
 
     /**
      * Nutritional value of the foodstuff.
      */
     @Column(nullable = true, length = MAX_LENGTH_FAT)
-    public Double fat;
+    public Float fat;
 
     /**
      * List of ingredients the foodstuff is used in.
@@ -170,7 +170,7 @@ public class Foodstuff extends PanacheEntity {
      * 
      * @param newCarbs new carbs of foodstuff.
      */
-    public void setCarbs(final Double newCarbs) {
+    public void setCarbs(final Float newCarbs) {
         if (newCarbs == null) {
             carbs = null;
             return;
@@ -186,7 +186,7 @@ public class Foodstuff extends PanacheEntity {
      * 
      * @param newProtein new protein of foodstuff.
      */
-    public void setProtein(final Double newProtein) {
+    public void setProtein(final Float newProtein) {
         if (newProtein == null) {
             protein = null;
             return;
@@ -202,7 +202,7 @@ public class Foodstuff extends PanacheEntity {
      * 
      * @param newFat new fat of foodstuff.
      */
-    public void setFat(final Double newFat) {
+    public void setFat(final Float newFat) {
         if (newFat == null) {
             fat = null;
             return;
@@ -216,11 +216,11 @@ public class Foodstuff extends PanacheEntity {
      * 
      * @param newValue New nutritional value.
      */
-    private void checkNutritionalValue(final double newValue) {
+    private void checkNutritionalValue(final float newValue) {
         final double minValue = 0;
-        final double maxValue = 999.9;
+        final double maxValue = 1000;
 
-        if (newValue < minValue || newValue > maxValue) {
+        if (newValue < minValue || newValue >= maxValue) {
             throw new IllegalArgumentException(
                     String.format("Wert muss zwischen %d und %d liegen.", minValue, maxValue));
         }
@@ -257,9 +257,9 @@ public class Foodstuff extends PanacheEntity {
             final String paramBrand,
             final String paramUnit,
             final Integer paramKcal,
-            final Double paramCarbs,
-            final Double paramProtein,
-            final Double paramFat) {
+            final Float paramCarbs,
+            final Float paramProtein,
+            final Float paramFat) {
         this.name = paramName;
         this.setBrand(paramBrand);
         this.setUnit(paramUnit);

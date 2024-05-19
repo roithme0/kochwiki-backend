@@ -39,16 +39,16 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
                     foodstuff.setUnit((String) value);
                     break;
                 case "kcal":
-                    foodstuff.kcal = (Integer) value;
+                    foodstuff.kcal = (value instanceof Number) ? ((Number) value).intValue() : null;
                     break;
                 case "carbs":
-                    foodstuff.carbs = (Double) value;
+                    foodstuff.carbs = (value instanceof Number) ? ((Number) value).floatValue() : null;
                     break;
                 case "protein":
-                    foodstuff.protein = (Double) value;
+                    foodstuff.protein = (value instanceof Number) ? ((Number) value).floatValue() : null;
                     break;
                 case "fat":
-                    foodstuff.fat = (Double) value;
+                    foodstuff.fat = (value instanceof Number) ? ((Number) value).floatValue() : null;
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown field '" + key + "'");
