@@ -31,10 +31,10 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                     recipe.name = (String) value;
                     break;
                 case "servings":
-                    recipe.servings = (Integer) value;
+                    recipe.servings = (value instanceof Number) ? ((Number) value).intValue() : null;
                     break;
                 case "preptime":
-                    recipe.preptime = (Integer) value;
+                    recipe.preptime = (value instanceof Number) ? ((Number) value).intValue() : null;
                     break;
                 case "originName":
                     recipe.originName = (String) value;
@@ -50,9 +50,9 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                     List<Ingredient> newIngredients = new ArrayList<Ingredient>();
                     List<LinkedHashMap<String, Object>> ingredientsList = (List<LinkedHashMap<String, Object>>) value;
                     for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
-                        Integer index = (Integer) ingredientMap.get("index");
-                        Float amount = ((Integer) ingredientMap.get("amount")).floatValue();
-                        Long foodstuffId = ((Integer) ingredientMap.get("foodstuffId")).longValue();
+                        Integer index = ((Number) ingredientMap.get("index")).intValue();
+                        Float amount = ((Number) ingredientMap.get("amount")).floatValue();
+                        Long foodstuffId = ((Number) ingredientMap.get("foodstuffId")).longValue();
                         Ingredient newIngredient = new Ingredient(index, amount, foodstuffId);
                         newIngredients.add(newIngredient);
                     }
@@ -62,7 +62,7 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                     List<Step> newSteps = new ArrayList<Step>();
                     List<LinkedHashMap<String, Object>> stepsList = (List<LinkedHashMap<String, Object>>) value;
                     for (LinkedHashMap<String, Object> stepMap : stepsList) {
-                        Integer index = (Integer) stepMap.get("index");
+                        Integer index = ((Number) stepMap.get("index")).intValue();
                         String description = (String) stepMap.get("description");
                         Step newStep = new Step(index, description);
                         newSteps.add(newStep);
