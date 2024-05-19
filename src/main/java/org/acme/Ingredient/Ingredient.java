@@ -27,7 +27,7 @@ public class Ingredient extends PanacheEntity {
     /**
      * Max length for ingredient.
      */
-    private static final int MAX_AMOUNT = 3;
+    private static final int MAX_AMOUNT = 4;
 
     /**
      * Index of the ingredient in the recipe.
@@ -78,10 +78,10 @@ public class Ingredient extends PanacheEntity {
      * @param newIndex new index to set.
      */
     public void setIndex(final Integer newIndex) {
-        final int minIndex = 1;
-        final int maxIndex = 99;
+        final int minIndex = 0;
+        final int maxIndex = 100;
 
-        if (newIndex < minIndex || newIndex > maxIndex) {
+        if (newIndex <= minIndex || newIndex >= maxIndex) {
             throw new IllegalArgumentException(
                     String.format("Wert muss zwischen %d und %d liegen.", minIndex, maxIndex));
         }
@@ -95,10 +95,10 @@ public class Ingredient extends PanacheEntity {
      * @param newAmount new amount to set.
      */
     public void setAmount(final Float newAmount) {
-        final int minAmount = 1;
-        final int maxAmount = 999;
+        final int minAmount = 0;
+        final int maxAmount = 10000;
 
-        if (newAmount < minAmount || newAmount > maxAmount) {
+        if (newAmount <= minAmount || newAmount >= maxAmount) {
             throw new IllegalArgumentException(
                     String.format("Wert muss zwischen %d und %d liegen.", minAmount, maxAmount));
         }
