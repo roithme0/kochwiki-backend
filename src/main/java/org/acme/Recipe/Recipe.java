@@ -39,6 +39,22 @@ public class Recipe extends PanacheEntity {
      * Maximum length of originUrl attribute.
      */
     static final int MAX_LENGTH_ORIGINURL = 200;
+    /**
+     * Maximum length of kcal attribute.
+     */
+    private static final int MAX_LENGTH_KCAL = 4;
+    /**
+     * Maximum length of carbs attribute.
+     */
+    private static final int MAX_LENGTH_CARBS = 4;
+    /**
+     * Maximum length of protein attribute.
+     */
+    private static final int MAX_LENGTH_PROTEIN = 4;
+    /**
+     * Maximum length of fat attribute.
+     */
+    private static final int MAX_LENGTH_FAT = 4;
 
     /**
      * Name of the recipe.
@@ -81,6 +97,30 @@ public class Recipe extends PanacheEntity {
     // */
     // @Column(nullable = true)
     // public File image;
+
+    /**
+     * Nutritional value per serving
+     */
+    @Column(nullable = true, length = MAX_LENGTH_KCAL)
+    public Integer kcal;
+
+    /**
+     * Nutritional value per serving
+     */
+    @Column(nullable = true, length = MAX_LENGTH_CARBS)
+    public Float carbs;
+
+    /**
+     * Nutritional value per serving
+     */
+    @Column(nullable = true, length = MAX_LENGTH_PROTEIN)
+    public Float protein;
+
+    /**
+     * Nutritional value per serving
+     */
+    @Column(nullable = true, length = MAX_LENGTH_FAT)
+    public Float fat;
 
     /**
      * List of ingredients used in the recipe.

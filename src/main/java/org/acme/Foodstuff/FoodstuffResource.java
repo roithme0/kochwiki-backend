@@ -2,11 +2,15 @@ package org.acme.Foodstuff;
 
 import java.util.Map;
 
+import org.acme.Recipe.Recipe;
+import org.acme.Recipe.RecipeResource;
+import org.acme.Ingredient.Ingredient;
 import org.jboss.logging.Logger;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class FoodstuffResource implements PanacheRepository<Foodstuff> {
@@ -14,6 +18,12 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
      * Logger for this class.
      */
     private static final Logger LOG = Logger.getLogger(FoodstuffService.class);
+
+    /**
+     * Resource to access recipes.
+     */
+    @Inject
+    private RecipeResource recipeResource;
 
     /**
      * Patch an foodstuff with the given updates.
@@ -54,6 +64,19 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
                     throw new IllegalArgumentException("Unknown field '" + key + "'");
             }
         }
+
+        updateNutritionalValuesOfRecipes(foodstuff);
         return foodstuff;
+    }
+
+    private void updateNutritionalValuesOfRecipes(Foodstuff foodstuff) {
+        if (foodstuff.ingredients.size() == 0) {
+            return;
+        }
+
+        for (Ingredient ingredient : foodstuff.ingredients) {
+            Recipe recipe = recipeResource.updateNutritionalValues(ingredient.recipe);
+            recipeResource.persist(recipe);
+        }
     }
 }

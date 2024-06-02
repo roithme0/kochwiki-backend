@@ -1,6 +1,5 @@
 package org.acme.Recipe;
 
-import java.util.List;
 import java.util.Map;
 
 import org.acme.ErrorResponse.ErrorResponse;
@@ -82,7 +81,7 @@ public class RecipeService {
     public Response create(final Recipe recipe) {
         LOG.info("POST: creating recipe '" + recipe.name + "' ...");
         try {
-            recipeResource.persist(recipe);
+            recipeResource.create(recipe);
             return Response.ok(recipe).build();
         } catch (Exception e) {
             return Response
