@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.acme.Foodstuff.Foodstuff;
-import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Ingredient.Ingredient;
 import org.acme.Step.Step;
 
@@ -17,6 +15,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class RecipeResource implements PanacheRepository<Recipe> {
+
+    public Recipe create(Recipe recipe) {
+        recipe = updateNutritionalValues(recipe);
+        persist(recipe);
+        return recipe;
+    }
+
     /**
      * Patch a recipe with the given updates.
      * Update all fields except id.
@@ -79,7 +84,6 @@ public class RecipeResource implements PanacheRepository<Recipe> {
         }
 
         recipe = updateNutritionalValues(recipe);
-
         return recipe;
     }
 
