@@ -87,7 +87,7 @@ public class RecipeResource implements PanacheRepository<Recipe> {
         return recipe;
     }
 
-    private Recipe updateNutritionalValues(Recipe recipe) {
+    public Recipe updateNutritionalValues(Recipe recipe) {
         if (recipe.ingredients.size() == 0) {
             recipe.kcal = null;
             recipe.carbs = null;
