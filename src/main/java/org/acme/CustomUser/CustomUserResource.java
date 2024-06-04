@@ -16,26 +16,26 @@ public class CustomUserResource implements PanacheRepository<CustomUser> {
     private static final Logger LOG = Logger.getLogger(CustomUserService.class);
 
     /**
-     * Patch an user with the given updates.
+     * Patch a customUser with the given updates.
      * Update all fields except id.
      * 
-     * @param user    user to patch
-     * @param updates updates to apply
-     * @return patched user
+     * @param customUser customUser to patch
+     * @param updates    updates to apply
+     * @return patched customUser
      */
-    public CustomUser patch(final CustomUser user, final Map<String, Object> updates) {
+    public CustomUser patch(final CustomUser customUser, final Map<String, Object> updates) {
         LOG.debug("updates: " + updates);
         for (Map.Entry<String, Object> entry : updates.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             switch (key) {
                 case "username":
-                    user.username = (String) value;
+                    customUser.username = (String) value;
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown field '" + key + "'");
             }
         }
-        return user;
+        return customUser;
     }
 }

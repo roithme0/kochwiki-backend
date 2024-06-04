@@ -34,25 +34,26 @@ public class CustomUserService {
 
     /**
      * @param username
-     * @return user or error.
+     * @return customUser or error.
      */
     @GET
     @Path("/{username}")
     public Response findByUsername(@PathParam("username") final String username) {
-        LOG.info("GET: find user with username '" + username + "' ...");
+        LOG.info("GET: find customUser with username '" + username + "' ...");
         try {
-            CustomUser user = em
-                    .createQuery("SELECT user FROM CustomUser user WHERE user.username = :username", CustomUser.class)
+            CustomUser customUser = em
+                    .createQuery("SELECT customUser FROM CustomUser customUser WHERE customUser.username = :username",
+                            CustomUser.class)
                     .setParameter("username", username)
                     .getSingleResult();
-            if (user == null) {
+            if (customUser == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
                         .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
                                 "CustomUser with username " + username + " not found"))
                         .build();
             }
-            return Response.ok(user).build();
+            return Response.ok(customUser).build();
         } catch (Exception e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -80,16 +81,16 @@ public class CustomUserService {
     }
 
     /**
-     * @param user to create.
-     * @return created user.
+     * @param customUser to create.
+     * @return created customUser.
      */
     @POST
     @Transactional
-    public Response create(final CustomUser user) {
-        LOG.info("POST: creating user '" + user.username + "' ...");
+    public Response create(final CustomUser customUser) {
+        LOG.info("POST: creating customUser '" + customUser.username + "' ...");
         try {
-            userResource.persist(user);
-            return Response.ok(user).build();
+            userResource.persist(customUser);
+            return Response.ok(customUser).build();
         } catch (Exception e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -100,25 +101,25 @@ public class CustomUserService {
     }
 
     /**
-     * @param id      of user to update.
+     * @param id      of customUser to update.
      * @param updates to apply.
-     * @return updated user.
+     * @return updated customUser.
      */
     @PATCH
     @Path("/{id}")
     @Transactional
     public Response patch(@PathParam("id") final Long id, final Map<String, Object> updates) {
-        LOG.info("PATCH: patching user with id '" + id + "' ...");
+        LOG.info("PATCH: patching customUser with id '" + id + "' ...");
         try {
-            CustomUser user = userResource.findById(id);
-            if (user == null) {
+            CustomUser customUser = userResource.findById(id);
+            if (customUser == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
                         .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
                                 "CustomUser with id " + id + " not found"))
                         .build();
             }
-            CustomUser updatedUser = userResource.patch(user, updates);
+            CustomUser updatedUser = userResource.patch(customUser, updates);
             return Response.ok(updatedUser).build();
         } catch (Exception e) {
             return Response
@@ -130,23 +131,23 @@ public class CustomUserService {
     }
 
     /**
-     * @param id of user to delete.
+     * @param id of customUser to delete.
      */
     @DELETE
     @Path("/{id}")
     @Transactional
     public Response delete(@PathParam("id") final Long id) {
-        LOG.info("DELETE: deleting user with id '" + id + "' ...");
+        LOG.info("DELETE: deleting customUser with id '" + id + "' ...");
         try {
-            CustomUser user = userResource.findById(id);
-            if (user == null) {
+            CustomUser customUser = userResource.findById(id);
+            if (customUser == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
                         .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
                                 "CustomUser with id " + id + " not found"))
                         .build();
             }
-            user.delete();
+            customUser.delete();
             return Response.ok().build();
         } catch (Exception e) {
             return Response
