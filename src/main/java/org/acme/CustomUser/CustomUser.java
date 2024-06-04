@@ -28,7 +28,7 @@ public class CustomUser extends PanacheEntity {
     /**
      * Constructor.
      * 
-     * @param paramUsername username of the user.
+     * @param paramUsername username of the customUser.
      */
     public CustomUser(
             final String paramUsername) {

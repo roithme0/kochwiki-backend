@@ -1,4 +1,4 @@
 /**
- * Classes for interacting with users.
+ * Classes for interacting with custom users.
  */
 package org.acme.CustomUser;
