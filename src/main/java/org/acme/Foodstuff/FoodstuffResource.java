@@ -26,7 +26,7 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
     private RecipeResource recipeResource;
 
     /**
-     * Patch an foodstuff with the given updates.
+     * Patch a foodstuff with the given updates.
      * Update all fields except id.
      * 
      * @param foodstuff foodstuff to patch
