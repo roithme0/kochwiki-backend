@@ -82,6 +82,38 @@ public class Ingredient extends PanacheEntity {
         return recipe.id;
     }
 
+    public String getName() {
+        return foodstuff.name;
+    }
+
+    public String getBrand() {
+        return foodstuff.brand;
+    }
+
+    public UnitEnum getUnit() {
+        return foodstuff.unit;
+    }
+
+    public String getUnitVerbose() {
+        return foodstuff.getUnitVerbose();
+    }
+
+    public Integer getKcal() {
+        return foodstuff.kcal;
+    }
+
+    public Float getCarbs() {
+        return foodstuff.carbs;
+    }
+
+    public Float getProtein() {
+        return foodstuff.protein;
+    }
+
+    public Float getFat() {
+        return foodstuff.fat;
+    }
+
     // #endregion
 
     // #region setters
@@ -151,42 +183,6 @@ public class Ingredient extends PanacheEntity {
      */
     public void setRecipe(final Recipe newRecipe) {
         recipe = newRecipe;
-    }
-
-    // #endregion
-
-    // #region foodstuff getters
-
-    public String getName() {
-        return foodstuff.name;
-    }
-
-    public String getBrand() {
-        return foodstuff.brand;
-    }
-
-    public UnitEnum getUnit() {
-        return foodstuff.unit;
-    }
-
-    public String getUnitVerbose() {
-        return foodstuff.getUnitVerbose();
-    }
-
-    public Integer getKcal() {
-        return foodstuff.kcal;
-    }
-
-    public Float getCarbs() {
-        return foodstuff.carbs;
-    }
-
-    public Float getProtein() {
-        return foodstuff.protein;
-    }
-
-    public Float getFat() {
-        return foodstuff.fat;
     }
 
     // #endregion
