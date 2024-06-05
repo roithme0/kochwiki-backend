@@ -14,14 +14,8 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class FoodstuffResource implements PanacheRepository<Foodstuff> {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(FoodstuffService.class);
 
-    /**
-     * Resource to access recipes.
-     */
     @Inject
     private RecipeResource recipeResource;
 
@@ -69,6 +63,8 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
         return foodstuff;
     }
 
+    // #region utilities
+
     private void updateNutritionalValuesOfRecipes(Foodstuff foodstuff) {
         if (foodstuff.ingredients.size() == 0) {
             return;
@@ -79,4 +75,6 @@ public class FoodstuffResource implements PanacheRepository<Foodstuff> {
             recipeResource.persist(recipe);
         }
     }
+
+    // #endregion
 }

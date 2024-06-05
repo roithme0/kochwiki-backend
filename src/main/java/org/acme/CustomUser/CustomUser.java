@@ -10,20 +10,23 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class CustomUser extends PanacheEntity {
+    // #region consts
 
-    /**
-     * Maximum length of username attribute.
-     */
     private static final int MAX_LENGTH_USERNAME = 50;
 
-    /**
-     * Username of the useraccount.
-     */
+    // #endregion
+
+    // #region fields
+
     @Column(unique = true, nullable = false, length = MAX_LENGTH_USERNAME)
     public String username;
 
     @OneToOne(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    public ShoppingList shoppingList;
+    public ShoppingList shoppingList = new ShoppingList(this);
+
+    // #endregion
+
+    // #region constructors
 
     /**
      * Default constructor for hibernate.
@@ -32,12 +35,12 @@ public class CustomUser extends PanacheEntity {
     }
 
     /**
-     * Constructor.
-     * 
      * @param paramUsername username of the customUser.
      */
     public CustomUser(
             final String paramUsername) {
         this.username = paramUsername;
     }
+
+    // #endregion
 }

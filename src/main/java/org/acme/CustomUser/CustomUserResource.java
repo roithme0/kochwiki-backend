@@ -10,9 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class CustomUserResource implements PanacheRepository<CustomUser> {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(CustomUserService.class);
 
     /**

@@ -31,42 +31,24 @@ import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 public class Ingredient extends PanacheEntity {
     // #region consts
 
-    /**
-     * Max length for index.
-     */
     private static final int MAX_INDEX = 2;
-    /**
-     * Max length for ingredient.
-     */
     private static final int MAX_AMOUNT = 4;
 
     // #endregion
 
     // #region fields
 
-    /**
-     * Index of the ingredient in the recipe.
-     */
     @Column(nullable = false, length = MAX_INDEX)
     public Integer index;
 
-    /**
-     * Amount of the foodstuff in the recipe.
-     */
     @Column(nullable = false, length = MAX_AMOUNT)
     public Float amount;
 
-    /**
-     * Foodstuff of the ingredient.
-     */
     @ManyToOne
     @JoinColumn
     @JsonBackReference("ingredient-foodstuff")
     public Foodstuff foodstuff;
 
-    /**
-     * Recipe the ingredient is used in.
-     */
     @ManyToOne
     @JoinColumn
     @JsonBackReference("recipe-ingredients")
@@ -81,16 +63,10 @@ public class Ingredient extends PanacheEntity {
 
     // #region getters
 
-    /**
-     * @return id of referenced foodstuff.
-     */
     public Long getFoodstuffId() {
         return foodstuff.id;
     }
 
-    /**
-     * @return id of recipe using this ingredient.
-     */
     public Long getRecipeId() {
         return recipe.id;
     }
@@ -131,12 +107,6 @@ public class Ingredient extends PanacheEntity {
 
     // #region setters
 
-    /**
-     * Set index of the ingredient.
-     * Validate new index.
-     * 
-     * @param newIndex new index to set.
-     */
     public void setIndex(final Integer newIndex) {
         final int minIndex = 0;
         final int maxIndex = 100;
@@ -148,12 +118,6 @@ public class Ingredient extends PanacheEntity {
         index = newIndex;
     }
 
-    /**
-     * Set amount of the foodstuff in the recipe.
-     * Validate new amount.
-     * 
-     * @param newAmount new amount to set.
-     */
     public void setAmount(final Float newAmount) {
         final int minAmount = 0;
         final int maxAmount = 10000;
@@ -165,22 +129,11 @@ public class Ingredient extends PanacheEntity {
         amount = newAmount;
     }
 
-    /**
-     * Set foodstuff of the ingredient.
-     * 
-     * @param newFoodstuff new foodstuff to set.
-     */
     public void setFoodstuff(final Foodstuff newFoodstuff) {
         foodstuff = newFoodstuff;
         foodstuff.addIngredient(this);
     }
 
-    /**
-     * Set id of the foodstuff of the ingredient.
-     * Check if foodstuff exists.
-     * 
-     * @param foodstuffId id of new foodstuff to set.
-     */
     public void setFoodstuffId(final Long foodstuffId) {
         Foodstuff newFoodstuff = Foodstuff.findById(foodstuffId);
         if (newFoodstuff == null) {
@@ -189,11 +142,6 @@ public class Ingredient extends PanacheEntity {
         setFoodstuff(newFoodstuff);
     }
 
-    /**
-     * Set recipe using the ingredient.
-     * 
-     * @param newRecipe new recipe to set.
-     */
     public void setRecipe(final Recipe newRecipe) {
         recipe = newRecipe;
     }

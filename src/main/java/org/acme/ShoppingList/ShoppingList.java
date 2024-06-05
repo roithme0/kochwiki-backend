@@ -8,23 +8,46 @@ import org.acme.ShoppingListItem.IShoppingListItem;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
-public class ShoppingList {
-    /**
-     * List of shoppingListItems.
-     */
+@Entity
+public class ShoppingList extends PanacheEntity {
+    // #region fields
+
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
     @JsonManagedReference("shoppingList-shoppingListItems")
     public List<IShoppingListItem> shoppingListItems = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "customUser_id", referencedColumnName = "id")
     public CustomUser customUser;
+
+    // #endregion
+
+    // #region constructors
+
+    /**
+     * Default constructor for hibernate.
+     */
+    public ShoppingList() {
+    }
+
+    /**
+     * @param paramCustomUser customUser of the shoppingList.
+     */
+    public ShoppingList(
+            final CustomUser paramCustomUser) {
+        this.customUser = paramCustomUser;
+    }
+
+    // #endregion
 }

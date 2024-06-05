@@ -5,8 +5,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
@@ -15,78 +13,40 @@ import java.util.List;
 import java.net.URL;
 
 import org.acme.Ingredient.Ingredient;
-import org.acme.ShoppingList.ShoppingList;
 import org.acme.Step.Step;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Recipe extends PanacheEntity {
-    /**
-     * Maximum length of name attribute.
-     */
+    // #region consts
+
     static final int MAX_LENGTH_NAME = 200;
-    /**
-     * Maximum length of servings attribute.
-     */
     static final int MAX_LENGTH_SERVINGS = 2;
-    /**
-     * Maximum length of preptime attribute.
-     */
     static final int MAX_LENGTH_PREPTIME = 3;
-    /**
-     * Maximum length of originName attribute.
-     */
     static final int MAX_LENGTH_ORIGINNAME = 200;
-    /**
-     * Maximum length of originUrl attribute.
-     */
     static final int MAX_LENGTH_ORIGINURL = 200;
-    /**
-     * Maximum length of kcal attribute.
-     */
     private static final int MAX_LENGTH_KCAL = 4;
-    /**
-     * Maximum length of carbs attribute.
-     */
     private static final int MAX_LENGTH_CARBS = 4;
-    /**
-     * Maximum length of protein attribute.
-     */
     private static final int MAX_LENGTH_PROTEIN = 4;
-    /**
-     * Maximum length of fat attribute.
-     */
     private static final int MAX_LENGTH_FAT = 4;
 
-    /**
-     * Name of the recipe.
-     */
+    // #endregion
+
+    // #region fields
+
     @Column(unique = true, nullable = false, length = MAX_LENGTH_NAME)
     public String name;
 
-    /**
-     * Number of servings the recipe is for.
-     */
     @Column(nullable = false, length = MAX_LENGTH_SERVINGS)
     public Integer servings;
 
-    /**
-     * Preparation time of the recipe in minutes.
-     */
     @Column(nullable = true, length = MAX_LENGTH_PREPTIME)
     public Integer preptime;
 
-    /**
-     * Name of the origin of the recipe.
-     */
     @Column(nullable = true, length = MAX_LENGTH_ORIGINNAME)
     public String originName;
 
-    /**
-     * URL of the origin of the recipe.
-     */
     @Column(nullable = true, length = MAX_LENGTH_ORIGINURL)
     public URL originUrl;
 
@@ -96,9 +56,6 @@ public class Recipe extends PanacheEntity {
     // @Column(nullable = true)
     // public File original;
 
-    // /**
-    // * Image of the recipe.
-    // */
     // @Column(nullable = true)
     // public File image;
 
@@ -126,28 +83,20 @@ public class Recipe extends PanacheEntity {
     @Column(nullable = true, length = MAX_LENGTH_FAT)
     public Float fat;
 
-    /**
-     * List of ingredients used in the recipe.
-     */
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
     @JsonManagedReference("recipe-ingredients")
     public List<Ingredient> ingredients = new ArrayList<>();
 
-    /**
-     * List of steps of the recipe.
-     */
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
     @JsonManagedReference("recipe-steps")
     public List<Step> steps = new ArrayList<>();
 
-    /**
-     * Set the number of servings of recipe.
-     * Check for invalid values.
-     * 
-     * @param newServings New number of servings.
-     */
+    // #endregion
+
+    // #region setters
+
     public void setServings(final Integer newServings) {
         final int minServings = 1;
         final int maxServings = 99;
@@ -159,12 +108,6 @@ public class Recipe extends PanacheEntity {
         servings = newServings;
     }
 
-    /**
-     * Set preparation time of recipe.
-     * Check for invalid values.
-     * 
-     * @param newPreptime New preparation time in minutes.
-     */
     public void setPreptime(final Integer newPreptime) {
         final int minPreptime = 1;
         final int maxPreptime = 999;
@@ -179,13 +122,6 @@ public class Recipe extends PanacheEntity {
         preptime = newPreptime;
     }
 
-    /**
-     * Set url of origin of recipe.
-     * Check for invalid values.
-     * Convert to URL.
-     * 
-     * @param newOriginUrl New URL of origin.
-     */
     public void setOriginUrl(final String newOriginUrl) {
         if (newOriginUrl == null || newOriginUrl == "") {
             originUrl = null;
@@ -214,21 +150,11 @@ public class Recipe extends PanacheEntity {
         }
     }
 
-    /**
-     * Add single ingredient to recipe.
-     * 
-     * @param newIngredient New ingredient to add.
-     */
     public void addIngredient(final Ingredient newIngredient) {
         ingredients.add(newIngredient);
         newIngredient.setRecipe(this);
     }
 
-    /**
-     * Remove single ingredient from recipe.
-     * 
-     * @param ingredient Ingredient to remove.
-     */
     public void removeIngredient(final Ingredient ingredient) {
         ingredients.remove(ingredient);
         ingredient.setRecipe(null);
@@ -249,25 +175,19 @@ public class Recipe extends PanacheEntity {
         }
     }
 
-    /**
-     * Add single step to recipe.
-     * 
-     * @param newStep New step to add.
-     */
     public void addStep(final Step newStep) {
         steps.add(newStep);
         newStep.recipe = this;
     }
 
-    /**
-     * Remove single step from recipe.
-     * 
-     * @param step Step to remove.
-     */
     public void removeStep(final Step step) {
         steps.remove(step);
         step.recipe = null;
     }
+
+    // #endregion
+
+    // #region constructors
 
     /**
      * Default constructor for hibernate.
@@ -276,8 +196,6 @@ public class Recipe extends PanacheEntity {
     }
 
     /**
-     * Constructor for recipe.
-     * 
      * @param paramName        Name of the recipe.
      * @param paramServings    Number of servings the recipe is for.
      * @param paramPreptime    Preparation time of the recipe in minutes.
@@ -304,4 +222,6 @@ public class Recipe extends PanacheEntity {
         this.setIngredients(paramIngredients);
         this.setSteps(paramSteps);
     }
+
+    // #endregion
 }

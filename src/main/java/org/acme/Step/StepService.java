@@ -1,7 +1,5 @@
 package org.acme.Step;
 
-import java.util.List;
-
 import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
@@ -12,20 +10,11 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/steps")
 public class StepService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(StepService.class);
 
-    /**
-     * Resource to access steps.
-     */
     @Inject
     private StepResource stepResource;
 
-    /**
-     * @return all steps
-     */
     @GET
     public Response findAll() {
         LOG.info("GET: finding all steps ...");

@@ -19,55 +19,52 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 // @UniqueConstraint(columnNames = {"index", "recipe_id"})
 // })
 public class Step extends PanacheEntity {
-    /**
-     * Maximum length of the index.
-     */
+    // #region consts
+
     private static final int MAX_LENGTH_INDEX = 2;
-    /**
-     * Maximum length of the description.
-     */
     private static final int MAX_LENGTH_DESCRIPTION = 200;
 
-    /**
-     * Index of the step in the recipe.
-     */
+    // #endregion
+
+    // #region fields
+
     @Column(nullable = false, length = MAX_LENGTH_INDEX)
     public Integer index;
 
-    /**
-     * Description of the step.
-     */
     @Column(nullable = false, length = MAX_LENGTH_DESCRIPTION)
     public String description;
 
-    /**
-     * Recipe the step is used in.
-     */
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
     @JsonBackReference("recipe-steps")
     public Recipe recipe;
 
-    /**
-     * @return id of the recipe the step is used in
-     */
+    // #endregion
+
+    // #region getters
+
     public Long getRecipeId() {
         return recipe.id;
     }
 
-    /**
-     * Set index of the step.
-     * @param newIndex new index
-     */
+    // #endregion
+
+    // #region setters
+
     public void setIndex(final Integer newIndex) {
         final int minIndex = 1;
         final int maxIndex = 99;
 
         if (newIndex < minIndex || newIndex > maxIndex) {
-            throw new IllegalArgumentException(String.format("Wert muss zwischen %d und %d liegen.", minIndex, maxIndex));
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minIndex, maxIndex));
         }
         index = newIndex;
     }
+
+    // #endregion
+
+    // #region constructors
 
     /**
      * Default constructor for hibernate.
@@ -76,8 +73,7 @@ public class Step extends PanacheEntity {
     }
 
     /**
-     * Constructor for creating a new step.
-     * @param paramIndex index of the step
+     * @param paramIndex       index of the step
      * @param paramDescription description of the step
      */
     public Step(
@@ -86,4 +82,6 @@ public class Step extends PanacheEntity {
         this.setIndex(paramIndex);
         this.description = paramDescription;
     }
+
+    // #endregion
 }

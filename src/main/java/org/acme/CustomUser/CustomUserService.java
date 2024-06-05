@@ -18,14 +18,8 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class CustomUserService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(CustomUserService.class);
 
-    /**
-     * Resource to access users.
-     */
     @Inject
     private CustomUserResource userResource;
 
@@ -34,7 +28,7 @@ public class CustomUserService {
 
     /**
      * @param username
-     * @return customUser or error.
+     * @return customUser or error if customUser does not exist.
      */
     @GET
     @Path("/{username}")
@@ -63,9 +57,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @return list of all users.
-     */
     @GET
     public Response listAll() {
         LOG.info("GET: listing all users ...");
@@ -103,7 +94,7 @@ public class CustomUserService {
     /**
      * @param id      of customUser to update.
      * @param updates to apply.
-     * @return updated customUser.
+     * @return updated customUser or error if customUser does not exist.
      */
     @PATCH
     @Path("/{id}")
