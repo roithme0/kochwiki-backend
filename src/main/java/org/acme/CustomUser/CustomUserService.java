@@ -3,6 +3,8 @@ package org.acme.CustomUser;
 import java.util.Map;
 
 import org.acme.ErrorResponse.ErrorResponse;
+import org.acme.ShoppingList.ShoppingList;
+import org.acme.ShoppingList.ShoppingListResource;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -22,6 +24,9 @@ public class CustomUserService {
 
     @Inject
     private CustomUserResource userResource;
+
+    @Inject
+    private ShoppingListResource shoppingListResource;
 
     @Inject
     EntityManager em;
@@ -80,6 +85,9 @@ public class CustomUserService {
     public Response create(final CustomUser customUser) {
         LOG.info("POST: creating customUser '" + customUser.username + "' ...");
         try {
+            ShoppingList shoppingList = new ShoppingList();
+            shoppingListResource.persist(shoppingList);
+            customUser.shoppingList = shoppingList;
             userResource.persist(customUser);
             return Response.ok(customUser).build();
         } catch (Exception e) {

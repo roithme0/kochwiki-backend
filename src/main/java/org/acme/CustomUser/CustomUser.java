@@ -3,7 +3,6 @@ package org.acme.CustomUser;
 import org.acme.ShoppingList.ShoppingList;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -21,8 +20,8 @@ public class CustomUser extends PanacheEntity {
     @Column(unique = true, nullable = false, length = MAX_LENGTH_USERNAME)
     public String username;
 
-    @OneToOne(optional = false, mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    public ShoppingList shoppingList = new ShoppingList();
+    @OneToOne(optional = false)
+    public ShoppingList shoppingList;
 
     // #endregion
 
@@ -40,7 +39,6 @@ public class CustomUser extends PanacheEntity {
     public CustomUser(
             final String paramUsername) {
         this.username = paramUsername;
-        this.shoppingList.customUser = this;
     }
 
     // #endregion
