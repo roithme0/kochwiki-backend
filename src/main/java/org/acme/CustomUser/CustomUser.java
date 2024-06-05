@@ -21,7 +21,7 @@ public class CustomUser extends PanacheEntity {
     @Column(unique = true, nullable = false, length = MAX_LENGTH_USERNAME)
     public String username;
 
-    @OneToOne(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(optional = false, mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
     public ShoppingList shoppingList = new ShoppingList(this);
 
     // #endregion
