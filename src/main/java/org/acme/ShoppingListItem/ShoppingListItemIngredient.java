@@ -2,7 +2,6 @@ package org.acme.ShoppingListItem;
 
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Ingredient.Ingredient;
-import org.acme.Recipe.Recipe;
 import org.acme.ShoppingList.ShoppingList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -20,6 +19,9 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     @Column(nullable = false)
     public Boolean isChecked;
 
+    @Column(nullable = false)
+    public Boolean isPinned;
+
     @ManyToOne
     @JoinColumn(name = "ingredient_id", nullable = false)
     @JsonBackReference("ingredient-shoppingListItemIngredients")
@@ -27,7 +29,7 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
 
     @ManyToOne
     @JoinColumn
-    @JsonBackReference("shoppingList-shoppingListItems")
+    @JsonBackReference("shoppingList-shoppingListItemIngredients")
     public ShoppingList shoppingList;
 
     // #endregion
@@ -36,6 +38,10 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
 
     public Boolean getIsChecked() {
         return this.isChecked;
+    }
+
+    public Boolean getIsPinned() {
+        return this.isPinned;
     }
 
     public String getName() {
@@ -73,6 +79,7 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
      */
     public ShoppingListItemIngredient(Ingredient paramIngredient) {
         this.isChecked = false;
+        this.isPinned = false;
         this.ingredient = paramIngredient;
     }
 

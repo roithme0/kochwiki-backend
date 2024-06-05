@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acme.CustomUser.CustomUser;
-import org.acme.ShoppingListItem.IShoppingListItem;
+import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -24,8 +24,8 @@ public class ShoppingList extends PanacheEntity {
 
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
-    @JsonManagedReference("shoppingList-shoppingListItems")
-    public List<IShoppingListItem> shoppingListItems = new ArrayList<>();
+    @JsonManagedReference("shoppingList-shoppingListItemIngredients")
+    public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "customUser_id", referencedColumnName = "id")

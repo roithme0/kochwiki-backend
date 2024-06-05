@@ -5,6 +5,8 @@ import org.acme.FoodstuffMetaData.UnitEnum;
 public interface IShoppingListItem {
     Boolean getIsChecked();
 
+    Boolean getIsPinned();
+
     String getName();
 
     String getBrand();
