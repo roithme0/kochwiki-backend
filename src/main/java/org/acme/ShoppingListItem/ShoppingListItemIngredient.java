@@ -2,6 +2,8 @@ package org.acme.ShoppingListItem;
 
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Ingredient.Ingredient;
+import org.acme.Recipe.Recipe;
+import org.acme.ShoppingList.ShoppingList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -22,6 +24,11 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     @JoinColumn(name = "ingredient_id", nullable = false)
     @JsonBackReference("ingredient-shoppingListItemIngredients")
     public Ingredient ingredient;
+
+    @ManyToOne
+    @JoinColumn
+    @JsonBackReference("shoppingList-shoppingListItems")
+    public ShoppingList shoppingList;
 
     // #endregion
 

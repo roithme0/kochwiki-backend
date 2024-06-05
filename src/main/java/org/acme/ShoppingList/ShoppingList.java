@@ -18,6 +18,6 @@ public class ShoppingList {
      */
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
-    @JsonManagedReference("shoppingList-steps")
+    @JsonManagedReference("shoppingList-shoppingListItems")
     public List<IShoppingListItem> shoppingListItems = new ArrayList<>();
 }
