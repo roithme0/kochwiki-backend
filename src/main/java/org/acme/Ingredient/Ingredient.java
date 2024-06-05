@@ -46,7 +46,7 @@ public class Ingredient extends PanacheEntity {
 
     @ManyToOne
     @JoinColumn
-    @JsonBackReference("ingredient-foodstuff")
+    @JsonBackReference("ingredients-foodstuff")
     public Foodstuff foodstuff;
 
     @ManyToOne

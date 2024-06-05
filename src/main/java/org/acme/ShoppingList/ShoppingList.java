@@ -41,13 +41,5 @@ public class ShoppingList extends PanacheEntity {
     public ShoppingList() {
     }
 
-    /**
-     * @param paramCustomUser customUser of the shoppingList.
-     */
-    public ShoppingList(
-            final CustomUser paramCustomUser) {
-        this.customUser = paramCustomUser;
-    }
-
     // #endregion
 }

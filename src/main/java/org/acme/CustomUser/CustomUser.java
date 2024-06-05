@@ -22,7 +22,7 @@ public class CustomUser extends PanacheEntity {
     public String username;
 
     @OneToOne(optional = false, mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    public ShoppingList shoppingList = new ShoppingList(this);
+    public ShoppingList shoppingList = new ShoppingList();
 
     // #endregion
 
@@ -40,6 +40,7 @@ public class CustomUser extends PanacheEntity {
     public CustomUser(
             final String paramUsername) {
         this.username = paramUsername;
+        this.shoppingList.customUser = this;
     }
 
     // #endregion
