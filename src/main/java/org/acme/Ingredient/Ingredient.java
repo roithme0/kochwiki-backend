@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 
 import org.acme.Foodstuff.Foodstuff;
+import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Recipe.Recipe;
 
 @Entity
@@ -20,6 +21,8 @@ import org.acme.Recipe.Recipe;
 // @UniqueConstraint(columnNames = {"foodstuff_id", "recipe_id"})
 // })
 public class Ingredient extends PanacheEntity {
+    // #region consts
+
     /**
      * Max length for index.
      */
@@ -28,6 +31,10 @@ public class Ingredient extends PanacheEntity {
      * Max length for ingredient.
      */
     private static final int MAX_AMOUNT = 4;
+
+    // #endregion
+
+    // #region fields
 
     /**
      * Index of the ingredient in the recipe.
@@ -42,7 +49,7 @@ public class Ingredient extends PanacheEntity {
     public Float amount;
 
     /**
-     * foodstuff of the ingredient.
+     * Foodstuff of the ingredient.
      */
     @ManyToOne
     @JoinColumn
@@ -57,6 +64,10 @@ public class Ingredient extends PanacheEntity {
     @JsonBackReference("recipe-ingredients")
     public Recipe recipe;
 
+    // #endregion
+
+    // #region getters
+
     /**
      * @return id of referenced foodstuff.
      */
@@ -70,6 +81,10 @@ public class Ingredient extends PanacheEntity {
     public Long getRecipeId() {
         return recipe.id;
     }
+
+    // #endregion
+
+    // #region setters
 
     /**
      * Set index of the ingredient.
@@ -138,6 +153,46 @@ public class Ingredient extends PanacheEntity {
         recipe = newRecipe;
     }
 
+    // #endregion
+
+    // #region foodstuff getters
+
+    public String getName() {
+        return foodstuff.name;
+    }
+
+    public String getBrand() {
+        return foodstuff.brand;
+    }
+
+    public UnitEnum getUnit() {
+        return foodstuff.unit;
+    }
+
+    public String getUnitVerbose() {
+        return foodstuff.getUnitVerbose();
+    }
+
+    public Integer getKcal() {
+        return foodstuff.kcal;
+    }
+
+    public Float getCarbs() {
+        return foodstuff.carbs;
+    }
+
+    public Float getProtein() {
+        return foodstuff.protein;
+    }
+
+    public Float getFat() {
+        return foodstuff.fat;
+    }
+
+    // #endregion
+
+    // #region constructors
+
     /**
      * Default constructor for hibernate.
      */
@@ -159,4 +214,6 @@ public class Ingredient extends PanacheEntity {
         this.setAmount(paramAmount);
         this.setFoodstuffId(paramFoodstuffId);
     }
+
+    // #endregion
 }
