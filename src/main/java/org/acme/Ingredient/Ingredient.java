@@ -1,18 +1,26 @@
 package org.acme.Ingredient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 // import jakarta.persistence.Table;
 // import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Column;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.acme.Foodstuff.Foodstuff;
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Recipe.Recipe;
+import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 @Entity
 // unique constraints prevented updating recipes
@@ -63,6 +71,11 @@ public class Ingredient extends PanacheEntity {
     @JoinColumn
     @JsonBackReference("recipe-ingredients")
     public Recipe recipe;
+
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Column(nullable = true)
+    @JsonManagedReference("ingredient-shoppingListItemIngredients")
+    public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
 
     // #endregion
 
@@ -196,8 +209,6 @@ public class Ingredient extends PanacheEntity {
     }
 
     /**
-     * Constructor.
-     * 
      * @param paramIndex       index of the ingredient.
      * @param paramAmount      amount of the foodstuff in the recipe.
      * @param paramFoodstuffId id of the foodstuff of the ingredient.
