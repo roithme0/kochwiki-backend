@@ -29,7 +29,7 @@ public class CustomUserService {
     private ShoppingListResource shoppingListResource;
 
     @Inject
-    EntityManager em;
+    EntityManager entityManager;
 
     /**
      * @param username
@@ -40,7 +40,7 @@ public class CustomUserService {
     public Response findByUsername(@PathParam("username") final String username) {
         LOG.info("GET: find customUser with username '" + username + "' ...");
         try {
-            CustomUser customUser = em
+            CustomUser customUser = entityManager
                     .createQuery("SELECT customUser FROM CustomUser customUser WHERE customUser.username = :username",
                             CustomUser.class)
                     .setParameter("username", username)
@@ -85,10 +85,9 @@ public class CustomUserService {
     public Response create(final CustomUser customUser) {
         LOG.info("POST: creating customUser '" + customUser.username + "' ...");
         try {
-            ShoppingList shoppingList = new ShoppingList();
-            shoppingListResource.persist(shoppingList);
-            customUser.shoppingList = shoppingList;
             userResource.persist(customUser);
+            ShoppingList shoppingList = new ShoppingList(customUser.id);
+            shoppingListResource.persist(shoppingList);
             return Response.ok(customUser).build();
         } catch (Exception e) {
             return Response

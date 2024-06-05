@@ -19,6 +19,9 @@ import jakarta.persistence.OneToMany;
 public class ShoppingList extends PanacheEntity {
     // #region fields
 
+    @Column(unique = true, nullable = false)
+    public Long customUserId;
+
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Column(nullable = true)
     @JsonManagedReference("shoppingList-shoppingListItemIngredients")
@@ -32,6 +35,10 @@ public class ShoppingList extends PanacheEntity {
      * Default constructor for hibernate.
      */
     public ShoppingList() {
+    }
+
+    public ShoppingList(Long paramCustomUserId) {
+        customUserId = paramCustomUserId;
     }
 
     // #endregion

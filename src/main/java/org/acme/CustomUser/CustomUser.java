@@ -20,9 +20,6 @@ public class CustomUser extends PanacheEntity {
     @Column(unique = true, nullable = false, length = MAX_LENGTH_USERNAME)
     public String username;
 
-    @OneToOne(optional = false)
-    public ShoppingList shoppingList;
-
     // #endregion
 
     // #region constructors

@@ -1,20 +1,22 @@
 package org.acme.ShoppingList;
 
-import org.acme.CustomUser.CustomUser;
-import org.acme.CustomUser.CustomUserResource;
-
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
 public class ShoppingListResource implements PanacheRepository<ShoppingList> {
 
     @Inject
-    private CustomUserResource customUserResource;
+    EntityManager entityManager;
 
     public ShoppingList findByCustomUserId(final Long customUserId) {
-        CustomUser customUser = customUserResource.findById(customUserId);
-        return customUser.shoppingList;
+        return entityManager
+                .createQuery(
+                        "SELECT shoppingList FROM ShoppingList shoppingList WHERE shoppingList.customUserId = :customUserId",
+                        ShoppingList.class)
+                .setParameter("customUserId", customUserId)
+                .getSingleResult();
     }
 }
