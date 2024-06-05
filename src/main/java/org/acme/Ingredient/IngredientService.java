@@ -1,9 +1,6 @@
 package org.acme.Ingredient;
 
-import java.util.List;
-
 import org.acme.ErrorResponse.ErrorResponse;
-import org.acme.FoodstuffMetaData.FoodstuffMetaData;
 import org.jboss.logging.Logger;
 
 import jakarta.ws.rs.Path;
