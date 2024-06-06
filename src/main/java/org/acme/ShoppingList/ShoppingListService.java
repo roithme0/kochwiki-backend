@@ -3,12 +3,14 @@ package org.acme.ShoppingList;
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
 import org.acme.Ingredient.IngredientResource;
+import org.acme.ShoppingListItem.ShoppingListItemIngredient;
+import org.acme.ShoppingListItem.ShoppingListItemIngredientResource;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
@@ -19,6 +21,9 @@ public class ShoppingListService {
 
     @Inject
     private ShoppingListResource shoppingListResource;
+
+    @Inject
+    private ShoppingListItemIngredientResource shoppingListItemIngredientResource;
 
     @Inject
     IngredientResource ingredientResource;
@@ -39,7 +44,7 @@ public class ShoppingListService {
 
     @GET
     @Path("/{customUserId}")
-    public Response findByCustomUserId(@PathParam("id") final Long customUserId) {
+    public Response findByCustomUserId(@PathParam("customUserId") final Long customUserId) {
         LOG.info("GET: find shoppingList for customUser with id '" + customUserId + "' ...");
         try {
             ShoppingList shoppingList = shoppingListResource.findByCustomUserId(customUserId);
@@ -60,10 +65,12 @@ public class ShoppingListService {
         }
     }
 
-    @POST
+    @PATCH
     @Transactional
-    @Path("/{customUserId}/addIngredient")
-    public Response addIngredient(@PathParam("id") final Long customUserId, Long ingredientId) {
+    @Path("/{customUserId}/addIngredient/{ingredientId}")
+    public Response addIngredient(@PathParam("customUserId") final Long customUserId,
+            @PathParam("ingredientId") final Long ingredientId,
+            final Float amount) {
         LOG.info("POST: adding ingredient with id '" + ingredientId + "' to shoppingList ...");
         try {
             ShoppingList shoppingList = shoppingListResource.findByCustomUserId(customUserId);
@@ -82,7 +89,11 @@ public class ShoppingListService {
                                 "Ingredient with id '" + ingredientId + "' not found"))
                         .build();
             }
-            // TODO: add ingredient to shoppingList
+            ShoppingListItemIngredient shoppingListItemIngredient = new ShoppingListItemIngredient(ingredient,
+                    amount);
+            shoppingList.addIngredient(shoppingListItemIngredient);
+            shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
+            shoppingListResource.persist(shoppingList);
             return Response.ok(shoppingList).build();
         } catch (Exception e) {
             return Response

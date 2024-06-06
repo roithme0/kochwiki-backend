@@ -1,11 +1,9 @@
 package org.acme.ShoppingList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -23,8 +21,16 @@ public class ShoppingList extends PanacheEntity {
 
     @ManyToMany
     @JoinTable(name = "shoppingList_shoppingListItemIngredient")
-    @JsonManagedReference("shoppingLists-shoppingListItemIngredients")
-    public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
+    public Set<ShoppingListItemIngredient> shoppingListItemIngredients = new HashSet<>();
+
+    // #endregion
+
+    // #region setters
+
+    public void addIngredient(final ShoppingListItemIngredient newShoppingListItemIngredient) {
+        shoppingListItemIngredients.add(newShoppingListItemIngredient);
+        newShoppingListItemIngredient.shoppingLists.add(this);
+    }
 
     // #endregion
 

@@ -1,6 +1,7 @@
 package org.acme.ShoppingListItem;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Ingredient.Ingredient;
@@ -30,40 +31,47 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     @JsonBackReference("ingredient-shoppingListItemIngredients")
     public Ingredient ingredient;
 
+    @Column(nullable = false)
+    public Float amount;
+
     @ManyToMany(mappedBy = "shoppingListItemIngredients")
-    @JsonBackReference("shoppingLists-shoppingListItemIngredients")
-    public List<ShoppingList> shoppingLists;
+    @JsonBackReference
+    public Set<ShoppingList> shoppingLists = new HashSet<>();
 
     // #endregion
 
     // #region getters
 
     public Boolean getIsChecked() {
-        return this.isChecked;
+        return isChecked;
     }
 
     public Boolean getIsPinned() {
-        return this.isPinned;
+        return isPinned;
     }
 
     public String getName() {
-        return this.ingredient.getName();
+        return ingredient.getName();
     }
 
     public String getBrand() {
-        return this.ingredient.getBrand();
+        return ingredient.getBrand();
     }
 
     public Float getAmount() {
-        return this.ingredient.amount;
+        return amount;
     }
 
     public UnitEnum getUnit() {
-        return this.ingredient.getUnit();
+        return ingredient.getUnit();
     }
 
     public String getUnitVerbose() {
-        return this.ingredient.getUnitVerbose();
+        return ingredient.getUnitVerbose();
+    }
+
+    public String getRecipeName() {
+        return ingredient.recipe.name;
     }
 
     // #endregion
@@ -79,10 +87,11 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     /**
      * @param paramIngredient
      */
-    public ShoppingListItemIngredient(Ingredient paramIngredient) {
+    public ShoppingListItemIngredient(Ingredient paramIngredient, Float paramAmount) {
         this.isChecked = false;
         this.isPinned = false;
         this.ingredient = paramIngredient;
+        this.amount = paramAmount;
     }
 
     // #endregion
