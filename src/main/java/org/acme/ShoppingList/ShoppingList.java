@@ -5,21 +5,27 @@ import java.util.Set;
 
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ShoppingList extends PanacheEntity {
     // #region fields
 
     @Column(unique = true, nullable = false)
     public Long customUserId;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "shoppingList_shoppingListItemIngredient")
     public Set<ShoppingListItemIngredient> shoppingListItemIngredients = new HashSet<>();
 

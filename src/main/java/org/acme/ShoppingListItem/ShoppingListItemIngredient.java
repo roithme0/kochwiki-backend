@@ -8,6 +8,8 @@ import org.acme.Ingredient.Ingredient;
 import org.acme.ShoppingList.ShoppingList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
@@ -17,6 +19,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ShoppingListItemIngredient extends PanacheEntity implements IShoppingListItem {
     // #region fields
 
@@ -35,7 +38,6 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     public Float amount;
 
     @ManyToMany(mappedBy = "shoppingListItemIngredients")
-    @JsonBackReference
     public Set<ShoppingList> shoppingLists = new HashSet<>();
 
     // #endregion
