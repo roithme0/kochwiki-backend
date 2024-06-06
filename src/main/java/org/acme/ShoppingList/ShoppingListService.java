@@ -1,5 +1,6 @@
 package org.acme.ShoppingList;
 
+import org.acme.CustomUser.CustomUser;
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
 import org.acme.Ingredient.IngredientResource;
@@ -8,6 +9,7 @@ import org.acme.ShoppingListItem.ShoppingListItemIngredientResource;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -27,6 +29,9 @@ public class ShoppingListService {
 
     @Inject
     IngredientResource ingredientResource;
+
+    @Inject
+    EntityManager entityManager;
 
     @GET
     public Response listAll() {
@@ -89,8 +94,19 @@ public class ShoppingListService {
                                 "Ingredient with id '" + ingredientId + "' not found"))
                         .build();
             }
-            ShoppingListItemIngredient shoppingListItemIngredient = new ShoppingListItemIngredient(ingredient,
-                    amount);
+
+            ShoppingListItemIngredient shoppingListItemIngredient = null;
+            try {
+                shoppingListItemIngredient = entityManager.createQuery(
+                        "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient",
+                        ShoppingListItemIngredient.class)
+                        .setParameter("ingredient", ingredient)
+                        .getSingleResult();
+            } catch (Exception e) {
+                // ingredient not used in any shopping list
+                shoppingListItemIngredient = new ShoppingListItemIngredient(ingredient,
+                        amount);
+            }
             shoppingList.addIngredient(shoppingListItemIngredient);
             shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
             shoppingListResource.persist(shoppingList);
