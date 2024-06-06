@@ -27,7 +27,7 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     public Boolean isPinned;
 
     @ManyToOne
-    @JoinColumn(name = "ingredient_id", nullable = false)
+    @JoinColumn(unique = true, name = "ingredient_id", nullable = false)
     @JsonBackReference("ingredient-shoppingListItemIngredients")
     public Ingredient ingredient;
 
