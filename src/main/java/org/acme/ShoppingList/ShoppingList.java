@@ -3,7 +3,9 @@ package org.acme.ShoppingList;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acme.Ingredient.Ingredient;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
+import org.acme.Step.Step;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -13,6 +15,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -22,9 +25,8 @@ public class ShoppingList extends PanacheEntity {
     @Column(unique = true, nullable = false)
     public Long customUserId;
 
-    @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @Column(nullable = true)
-    @JsonManagedReference("shoppingList-shoppingListItemIngredients")
+    @ManyToMany
+    // @JsonManagedReference("shoppingList-shoppingListItemIngredients")
     public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
 
     // #endregion

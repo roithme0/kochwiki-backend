@@ -1,5 +1,7 @@
 package org.acme.ShoppingListItem;
 
+import java.util.List;
+
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Ingredient.Ingredient;
 import org.acme.ShoppingList.ShoppingList;
@@ -10,6 +12,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -27,10 +30,9 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     @JsonBackReference("ingredient-shoppingListItemIngredients")
     public Ingredient ingredient;
 
-    @ManyToOne
-    @JoinColumn
-    @JsonBackReference("shoppingList-shoppingListItemIngredients")
-    public ShoppingList shoppingList;
+    @ManyToMany(mappedBy = "shoppingListItemIngredients")
+    // @JsonBackReference("shoppingList-shoppingListItemIngredients")
+    public List<ShoppingList> shoppingLists;
 
     // #endregion
 
