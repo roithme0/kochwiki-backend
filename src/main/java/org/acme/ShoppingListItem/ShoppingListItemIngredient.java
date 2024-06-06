@@ -31,7 +31,7 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     public Ingredient ingredient;
 
     @ManyToMany(mappedBy = "shoppingListItemIngredients")
-    // @JsonBackReference("shoppingList-shoppingListItemIngredients")
+    @JsonBackReference("shoppingLists-shoppingListItemIngredients")
     public List<ShoppingList> shoppingLists;
 
     // #endregion
