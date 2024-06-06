@@ -32,6 +32,11 @@ public class ShoppingList extends PanacheEntity {
         newShoppingListItemIngredient.shoppingLists.add(this);
     }
 
+    public void removeIngredient(final ShoppingListItemIngredient shoppingListItemIngredient) {
+        shoppingListItemIngredients.remove(shoppingListItemIngredient);
+        shoppingListItemIngredient.shoppingLists.remove(this);
+    }
+
     // #endregion
 
     // #region constructors

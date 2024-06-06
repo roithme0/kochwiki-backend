@@ -76,7 +76,7 @@ public class ShoppingListService {
     public Response addIngredient(@PathParam("customUserId") final Long customUserId,
             @PathParam("ingredientId") final Long ingredientId,
             final Float amount) {
-        LOG.info("POST: adding ingredient with id '" + ingredientId + "' to shoppingList ...");
+        LOG.info("PATCH: adding ingredient with id '" + ingredientId + "' to shoppingList ...");
         try {
             ShoppingList shoppingList = shoppingListResource.findByCustomUserId(customUserId);
             if (shoppingList == null) {
@@ -94,7 +94,6 @@ public class ShoppingListService {
                                 "Ingredient with id '" + ingredientId + "' not found"))
                         .build();
             }
-
             ShoppingListItemIngredient shoppingListItemIngredient = null;
             try {
                 shoppingListItemIngredient = entityManager.createQuery(
@@ -111,6 +110,58 @@ public class ShoppingListService {
             shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
             shoppingListResource.persist(shoppingList);
             return Response.ok(shoppingList).build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                            "Unexpected error: " + e.getMessage()))
+                    .build();
+        }
+    }
+
+    @PATCH
+    @Transactional
+    @Path("/{customUserId}/removeIngredient/{ingredientId}")
+    public Response removeIngredient(@PathParam("customUserId") final Long customUserId,
+            @PathParam("ingredientId") final Long ingredientId,
+            final Float amount) {
+        LOG.info("PATCH: removing ingredient with id '" + ingredientId + "' from shoppingList ...");
+        try {
+            ShoppingList shoppingList = shoppingListResource.findByCustomUserId(customUserId);
+            if (shoppingList == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "ShoppingList for customUser with id '" + customUserId + "' not found"))
+                        .build();
+            }
+            Ingredient ingredient = ingredientResource.findById(ingredientId);
+            if (ingredient == null) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Ingredient with id '" + ingredientId + "' not found"))
+                        .build();
+            }
+            ShoppingListItemIngredient shoppingListItemIngredient = null;
+            try {
+                shoppingListItemIngredient = entityManager.createQuery(
+                        "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient",
+                        ShoppingListItemIngredient.class)
+                        .setParameter("ingredient", ingredient)
+                        .getSingleResult();
+
+                shoppingList.removeIngredient(shoppingListItemIngredient);
+                shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
+                shoppingListResource.persist(shoppingList);
+                return Response.ok(shoppingList).build();
+            } catch (Exception e) {
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                "Ingredient with id '" + ingredientId + "' not found in shoppingList"))
+                        .build();
+            }
         } catch (Exception e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
