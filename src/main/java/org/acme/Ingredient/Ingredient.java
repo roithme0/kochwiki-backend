@@ -128,7 +128,7 @@ public class Ingredient extends PanacheEntity {
 
     public void setFoodstuff(final Foodstuff newFoodstuff) {
         foodstuff = newFoodstuff;
-        foodstuff.addIngredient(this);
+        foodstuff.ingredients.add(this);
     }
 
     public void setFoodstuffId(final Long foodstuffId) {

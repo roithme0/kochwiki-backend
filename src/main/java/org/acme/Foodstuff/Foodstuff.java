@@ -202,9 +202,5 @@ public class Foodstuff extends PanacheEntity {
         }
     }
 
-    public void addIngredient(final Ingredient newIngredient) {
-        ingredients.add(newIngredient);
-    }
-
     // #endregion
 }
