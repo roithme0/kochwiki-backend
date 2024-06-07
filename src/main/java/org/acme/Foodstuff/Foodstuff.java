@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -63,7 +63,7 @@ public class Foodstuff extends PanacheEntity {
     public Float fat;
 
     @OneToMany(mappedBy = "foodstuff", fetch = FetchType.EAGER)
-    @JsonManagedReference("ingredients-foodstuff")
+    @JsonIgnore
     public List<Ingredient> ingredients = new ArrayList<>();
 
     // #endregion
