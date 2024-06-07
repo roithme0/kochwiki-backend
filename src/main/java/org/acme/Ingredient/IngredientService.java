@@ -17,7 +17,7 @@ public class IngredientService {
 
     @GET
     public Response listAll() {
-        LOG.info("GET: list all ingredients ...");
+        LOG.info("GET: listing all ingredients ...");
         try {
             return Response.ok(ingredientResource.listAll()).build();
         } catch (Exception e) {
