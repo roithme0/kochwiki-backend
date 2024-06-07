@@ -8,18 +8,18 @@ import org.acme.Ingredient.Ingredient;
 import org.acme.ShoppingList.ShoppingList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ShoppingListItemIngredient extends PanacheEntity implements IShoppingListItem {
     // #region fields
 
@@ -37,8 +37,12 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     @Column(nullable = false)
     public Float amount;
 
-    @ManyToMany(mappedBy = "shoppingListItemIngredients")
+    @ManyToMany(mappedBy = "shoppingListItemIngredients", fetch = FetchType.EAGER)
+    @JsonIgnore
     public Set<ShoppingList> shoppingLists = new HashSet<>();
+
+    @Column(nullable = true)
+    public Set<Long> shoppingListIds = new HashSet<>();
 
     // #endregion
 
@@ -74,6 +78,20 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
 
     public String getRecipeName() {
         return ingredient.recipe.name;
+    }
+
+    // #endregion
+
+    // #region methods
+
+    public void addShoppingList(final ShoppingList newShoppingList) {
+        shoppingLists.add(newShoppingList);
+        shoppingListIds.add(newShoppingList.id);
+    }
+
+    public void removeShoppingList(final ShoppingList shoppingList) {
+        shoppingLists.remove(shoppingList);
+        shoppingListIds.remove(shoppingList.id);
     }
 
     // #endregion

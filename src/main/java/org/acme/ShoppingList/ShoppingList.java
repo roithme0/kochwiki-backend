@@ -6,7 +6,6 @@ import java.util.Set;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -31,16 +30,16 @@ public class ShoppingList extends PanacheEntity {
 
     // #endregion
 
-    // #region setters
+    // #region methods
 
     public void addIngredient(final ShoppingListItemIngredient newShoppingListItemIngredient) {
         shoppingListItemIngredients.add(newShoppingListItemIngredient);
-        newShoppingListItemIngredient.shoppingLists.add(this);
+        newShoppingListItemIngredient.addShoppingList(this);
     }
 
     public void removeIngredient(final ShoppingListItemIngredient shoppingListItemIngredient) {
         shoppingListItemIngredients.remove(shoppingListItemIngredient);
-        shoppingListItemIngredient.shoppingLists.remove(this);
+        shoppingListItemIngredient.removeShoppingList(this);
     }
 
     // #endregion
