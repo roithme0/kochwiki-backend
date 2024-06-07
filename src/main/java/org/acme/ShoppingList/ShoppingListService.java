@@ -9,6 +9,7 @@ import org.acme.Ingredient.IngredientResource;
 import org.acme.ShoppingList.DTOs.AddIngredientsDTO;
 import org.acme.ShoppingList.DTOs.RemoveIngredientsDTO;
 import org.acme.ShoppingList.DTOs.SetIsCheckedIngredientDTO;
+import org.acme.ShoppingList.DTOs.SetIsPinnedIngredientDTO;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 import org.acme.ShoppingListItem.ShoppingListItemIngredientResource;
 import org.jboss.logging.Logger;
@@ -229,6 +230,55 @@ public class ShoppingListService {
                                                 .build();
                         }
                         shoppingListItemIngredient.isChecked = setIsCheckedIngredientDTO.isChecked;
+                        shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
+                        return Response.ok(shoppingListItemIngredient).build();
+                } catch (Exception e) {
+                        return Response
+                                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                                        .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                                                        "Unexpected error: " + e.getMessage()))
+                                        .build();
+                }
+        }
+
+        @PATCH
+        @Transactional
+        @Path("/ingredientIsPinned")
+        @Consumes(MediaType.APPLICATION_JSON)
+        public Response setIsPinned(SetIsPinnedIngredientDTO setIsPinnedIngredientDTO) {
+                LOG.info(
+                                "PATCH: setting isPinned for itemIngredient with id '"
+                                                + setIsPinnedIngredientDTO.itemIngredientId
+                                                + "' of shoppingList ...");
+                try {
+                        ShoppingList shoppingList = shoppingListResource
+                                        .findById(setIsPinnedIngredientDTO.customUserId);
+                        if (shoppingList == null) {
+                                return Response
+                                                .status(Response.Status.NOT_FOUND)
+                                                .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                                                "ShoppingList for customUser with id '"
+                                                                                + setIsPinnedIngredientDTO.customUserId
+                                                                                + "' not found"))
+                                                .build();
+                        }
+                        Optional<ShoppingListItemIngredient> shoppingListItemIngredientOptional = shoppingList.shoppingListItemIngredients
+                                        .stream()
+                                        .filter(itemIngredient -> itemIngredient.id
+                                                        .equals(setIsPinnedIngredientDTO.itemIngredientId))
+                                        .findFirst();
+                        ShoppingListItemIngredient shoppingListItemIngredient = shoppingListItemIngredientOptional
+                                        .orElse(null);
+                        if (shoppingListItemIngredient == null) {
+                                return Response
+                                                .status(Response.Status.NOT_FOUND)
+                                                .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                                                "ShoppingListItemIngredient with id '"
+                                                                                + setIsPinnedIngredientDTO.itemIngredientId
+                                                                                + "' not found in shoppingList"))
+                                                .build();
+                        }
+                        shoppingListItemIngredient.isPinned = setIsPinnedIngredientDTO.isPinned;
                         shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
                         return Response.ok(shoppingListItemIngredient).build();
                 } catch (Exception e) {
