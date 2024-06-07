@@ -31,10 +31,6 @@ public class CustomUserService {
     @Inject
     EntityManager entityManager;
 
-    /**
-     * @param username
-     * @return customUser or error if customUser does not exist.
-     */
     @GET
     @Path("/{username}")
     public Response findByUsername(@PathParam("username") final String username) {
@@ -76,10 +72,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param customUser to create.
-     * @return created customUser.
-     */
     @POST
     @Transactional
     public Response create(final CustomUser customUser) {
@@ -98,11 +90,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param id      of customUser to update.
-     * @param updates to apply.
-     * @return updated customUser or error if customUser does not exist.
-     */
     @PATCH
     @Path("/{id}")
     @Transactional
@@ -128,9 +115,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param id of customUser to delete.
-     */
     @DELETE
     @Path("/{id}")
     @Transactional
