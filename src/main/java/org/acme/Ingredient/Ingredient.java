@@ -59,10 +59,6 @@ public class Ingredient extends PanacheEntity {
 
     // #region getters
 
-    public Long getFoodstuffId() {
-        return foodstuff.id;
-    }
-
     public Long getRecipeId() {
         return recipe.id;
     }
