@@ -144,15 +144,6 @@ public class Foodstuff extends PanacheEntity {
     public Foodstuff() {
     }
 
-    /**
-     * @param paramName    Name of foodstuff.
-     * @param paramBrand   Brand of foodstuff.
-     * @param paramUnit    Unit of foodstuff.
-     * @param paramKcal    Kcal of foodstuff.
-     * @param paramCarbs   Carbs of foodstuff.
-     * @param paramProtein Protein of foodstuff.
-     * @param paramFat     Fat of foodstuff.
-     */
     public Foodstuff(
             final String paramName,
             final String paramBrand,
@@ -211,11 +202,6 @@ public class Foodstuff extends PanacheEntity {
         }
     }
 
-    /**
-     * Add single ingredient to foodstuff.
-     * 
-     * @param newIngredient New ingredient to add.
-     */
     public void addIngredient(final Ingredient newIngredient) {
         ingredients.add(newIngredient);
     }

@@ -193,15 +193,6 @@ public class Recipe extends PanacheEntity {
     public Recipe() {
     }
 
-    /**
-     * @param paramName        Name of the recipe.
-     * @param paramServings    Number of servings the recipe is for.
-     * @param paramPreptime    Preparation time of the recipe in minutes.
-     * @param paramOriginName  Name of the origin of the recipe.
-     * @param paramOriginUrl   URL of the origin of the recipe.
-     * @param paramIngredients List of ingredients used in the recipe.
-     * @param paramSteps       List of steps of the recipe.
-     */
     public Recipe(
             final String paramName,
             final Integer paramServings,
