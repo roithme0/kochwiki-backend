@@ -54,7 +54,7 @@ public class ShoppingListService {
         public Response findByCustomUserId(@PathParam("customUserId") final Long customUserId) {
                 LOG.info("GET: find shoppingList for customUser with id '" + customUserId + "' ...");
                 try {
-                        ShoppingList shoppingList = shoppingListResource.findByCustomUserId(customUserId);
+                        ShoppingList shoppingList = shoppingListResource.findById(customUserId);
                         if (shoppingList == null) {
                                 return Response
                                                 .status(Response.Status.NOT_FOUND)
@@ -82,7 +82,7 @@ public class ShoppingListService {
                                 + "' to shoppingList ...");
                 try {
                         ShoppingList shoppingList = shoppingListResource
-                                        .findByCustomUserId(addIngredientsDTO.customUserId);
+                                        .findById(addIngredientsDTO.customUserId);
                         if (shoppingList == null) {
                                 return Response
                                                 .status(Response.Status.NOT_FOUND)
@@ -136,7 +136,7 @@ public class ShoppingListService {
                                                 + "' from shoppingList ...");
                 try {
                         ShoppingList shoppingList = shoppingListResource
-                                        .findByCustomUserId(removeIngredientsDTO.customUserId);
+                                        .findById(removeIngredientsDTO.customUserId);
                         if (shoppingList == null) {
                                 return Response
                                                 .status(Response.Status.NOT_FOUND)
