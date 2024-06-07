@@ -139,10 +139,6 @@ public class Ingredient extends PanacheEntity {
         setFoodstuff(newFoodstuff);
     }
 
-    public void setRecipe(final Recipe newRecipe) {
-        recipe = newRecipe;
-    }
-
     // #endregion
 
     // #region constructors

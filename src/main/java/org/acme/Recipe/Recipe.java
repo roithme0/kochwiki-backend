@@ -150,12 +150,12 @@ public class Recipe extends PanacheEntity {
 
     public void addIngredient(final Ingredient newIngredient) {
         ingredients.add(newIngredient);
-        newIngredient.setRecipe(this);
+        newIngredient.recipe = this;
     }
 
     public void removeIngredient(final Ingredient ingredient) {
         ingredients.remove(ingredient);
-        ingredient.setRecipe(null);
+        ingredient.recipe = null;
     }
 
     /**
