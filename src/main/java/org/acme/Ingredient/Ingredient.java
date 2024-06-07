@@ -53,7 +53,6 @@ public class Ingredient extends PanacheEntity {
     public Recipe recipe;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @Column(nullable = true)
     @JsonManagedReference("ingredient-shoppingListItemIngredients")
     public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
 
@@ -154,11 +153,6 @@ public class Ingredient extends PanacheEntity {
     public Ingredient() {
     }
 
-    /**
-     * @param paramIndex       index of the ingredient.
-     * @param paramAmount      amount of the foodstuff in the recipe.
-     * @param paramFoodstuffId id of the foodstuff of the ingredient.
-     */
     public Ingredient(
             final Integer paramIndex,
             final Float paramAmount,

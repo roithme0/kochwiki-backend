@@ -63,7 +63,6 @@ public class Foodstuff extends PanacheEntity {
     public Float fat;
 
     @OneToMany(mappedBy = "foodstuff", fetch = FetchType.EAGER)
-    @Column(nullable = true)
     @JsonManagedReference("ingredients-foodstuff")
     public List<Ingredient> ingredients = new ArrayList<>();
 
