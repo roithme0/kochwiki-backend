@@ -1,9 +1,14 @@
 package org.acme.ShoppingList;
 
+import java.util.Optional;
+
 import org.acme.CustomUser.CustomUser;
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
 import org.acme.Ingredient.IngredientResource;
+import org.acme.ShoppingList.DTOs.AddIngredientsDTO;
+import org.acme.ShoppingList.DTOs.RemoveIngredientsDTO;
+import org.acme.ShoppingList.DTOs.SetIsCheckedIngredientDTO;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 import org.acme.ShoppingListItem.ShoppingListItemIngredientResource;
 import org.jboss.logging.Logger;
@@ -177,6 +182,55 @@ public class ShoppingListService {
                                                                                 + "' not found in shoppingList"))
                                                 .build();
                         }
+                } catch (Exception e) {
+                        return Response
+                                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                                        .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                                                        "Unexpected error: " + e.getMessage()))
+                                        .build();
+                }
+        }
+
+        @PATCH
+        @Transactional
+        @Path("/ingredientIsChecked")
+        @Consumes(MediaType.APPLICATION_JSON)
+        public Response setIsChecked(SetIsCheckedIngredientDTO setIsCheckedIngredientDTO) {
+                LOG.info(
+                                "PATCH: setting isChecked for itemIngredient with id '"
+                                                + setIsCheckedIngredientDTO.itemIngredientId
+                                                + "' of shoppingList ...");
+                try {
+                        ShoppingList shoppingList = shoppingListResource
+                                        .findById(setIsCheckedIngredientDTO.customUserId);
+                        if (shoppingList == null) {
+                                return Response
+                                                .status(Response.Status.NOT_FOUND)
+                                                .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                                                "ShoppingList for customUser with id '"
+                                                                                + setIsCheckedIngredientDTO.customUserId
+                                                                                + "' not found"))
+                                                .build();
+                        }
+                        Optional<ShoppingListItemIngredient> shoppingListItemIngredientOptional = shoppingList.shoppingListItemIngredients
+                                        .stream()
+                                        .filter(itemIngredient -> itemIngredient.id
+                                                        .equals(setIsCheckedIngredientDTO.itemIngredientId))
+                                        .findFirst();
+                        ShoppingListItemIngredient shoppingListItemIngredient = shoppingListItemIngredientOptional
+                                        .orElse(null);
+                        if (shoppingListItemIngredient == null) {
+                                return Response
+                                                .status(Response.Status.NOT_FOUND)
+                                                .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                                                "ShoppingListItemIngredient with id '"
+                                                                                + setIsCheckedIngredientDTO.itemIngredientId
+                                                                                + "' not found in shoppingList"))
+                                                .build();
+                        }
+                        shoppingListItemIngredient.isChecked = setIsCheckedIngredientDTO.isChecked;
+                        shoppingListItemIngredientResource.persist(shoppingListItemIngredient);
+                        return Response.ok(shoppingListItemIngredient).build();
                 } catch (Exception e) {
                         return Response
                                         .status(Response.Status.INTERNAL_SERVER_ERROR)

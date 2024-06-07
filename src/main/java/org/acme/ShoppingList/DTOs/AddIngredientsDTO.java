@@ -1,4 +1,4 @@
-package org.acme.ShoppingList;
+package org.acme.ShoppingList.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
