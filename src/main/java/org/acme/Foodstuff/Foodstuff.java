@@ -16,7 +16,9 @@ import org.acme.Ingredient.Ingredient;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

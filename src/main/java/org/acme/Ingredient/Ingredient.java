@@ -14,11 +14,14 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.acme.Foodstuff.Foodstuff;
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Recipe.Recipe;
+import org.acme.ShoppingList.ShoppingList;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 @Entity
