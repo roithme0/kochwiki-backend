@@ -10,6 +10,7 @@ public class ShoppingListItemMetaData {
         verboseNames.put("brand", "Marke");
         verboseNames.put("amount", "Menge");
         verboseNames.put("unitVerbose", "Einheit");
+        verboseNames.put("recipeName", "Rezept");
         return verboseNames;
     }
 }
