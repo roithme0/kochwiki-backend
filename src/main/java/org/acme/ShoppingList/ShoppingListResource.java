@@ -19,7 +19,6 @@ public class ShoppingListResource implements PanacheRepository<ShoppingList> {
         for (ShoppingListItemIngredient item : ingredient.shoppingListItemIngredients) {
             ShoppingList shoppingList = item.shoppingList;
             shoppingList.shoppingListItemIngredients.remove(item);
-            entityManager.persist(shoppingList);
         }
     }
 }

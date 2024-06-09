@@ -1,6 +1,7 @@
 package org.acme.Recipe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +14,10 @@ import org.acme.Step.Step;
 import org.acme.Step.StepResource;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-
+import io.quarkus.hibernate.orm.runtime.dev.HibernateOrmDevInfo.Entity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
 public class RecipeResource implements PanacheRepository<Recipe> {
@@ -28,6 +30,9 @@ public class RecipeResource implements PanacheRepository<Recipe> {
 
     @Inject
     ShoppingListResource shoppingListResource;
+
+    @Inject
+    EntityManager entityManager;
 
     public Recipe create(Recipe recipe) {
         recipe = updateNutritionalValues(recipe);
@@ -72,12 +77,13 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                     List<LinkedHashMap<String, Object>> ingredientsList = (List<LinkedHashMap<String, Object>>) value;
 
                     // remove ingredient if not in updates
-                    List<Ingredient> existingIngredients = recipe.ingredients;
-                    for (int i = 0; i < existingIngredients.size(); i++) {
+                    Iterator<Ingredient> iterator = recipe.ingredients.iterator();
+                    while (iterator.hasNext()) {
+                        Ingredient existingIngredient = iterator.next();
                         Boolean ingredientFound = false;
 
                         for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
-                            if (existingIngredients.get(i).foodstuff.id == ((Number) ingredientMap.get("foodstuffId"))
+                            if (existingIngredient.foodstuff.id == ((Number) ingredientMap.get("foodstuffId"))
                                     .intValue()) {
                                 ingredientFound = true;
                                 break;
@@ -85,9 +91,9 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                         }
 
                         if (ingredientFound == false) {
-                            Ingredient ingredientToRemove = existingIngredients.get(i);
-                            recipe.ingredients.remove(ingredientToRemove);
+                            Ingredient ingredientToRemove = existingIngredient;
                             shoppingListResource.removeIngredientFromAllShoppingLists(ingredientToRemove);
+                            iterator.remove();
                         }
                     }
 
@@ -104,7 +110,7 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                         }
 
                         // create new ingredient if not existing
-                        if (!existingIngredientFound) {
+                        if (existingIngredientFound == false) {
                             Integer index = ((Number) ingredientMap.get("index")).intValue();
                             Float amount = ((Number) ingredientMap.get("amount")).floatValue();
                             Long foodstuffId = ((Number) ingredientMap.get("foodstuffId")).longValue();
