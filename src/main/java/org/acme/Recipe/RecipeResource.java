@@ -1,20 +1,38 @@
 package org.acme.Recipe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.acme.Foodstuff.Foodstuff;
 import org.acme.Ingredient.Ingredient;
+import org.acme.Ingredient.IngredientResource;
+import org.acme.ShoppingList.ShoppingListResource;
 import org.acme.Step.Step;
+import org.acme.Step.StepResource;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-
+import io.quarkus.hibernate.orm.runtime.dev.HibernateOrmDevInfo.Entity;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
 public class RecipeResource implements PanacheRepository<Recipe> {
+
+    @Inject
+    IngredientResource ingredientResource;
+
+    @Inject
+    StepResource stepResource;
+
+    @Inject
+    ShoppingListResource shoppingListResource;
+
+    @Inject
+    EntityManager entityManager;
 
     public Recipe create(Recipe recipe) {
         recipe = updateNutritionalValues(recipe);
@@ -56,16 +74,50 @@ public class RecipeResource implements PanacheRepository<Recipe> {
                 // case "image":
                 // break;
                 case "ingredients":
-                    List<Ingredient> newIngredients = new ArrayList<Ingredient>();
                     List<LinkedHashMap<String, Object>> ingredientsList = (List<LinkedHashMap<String, Object>>) value;
-                    for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
-                        Integer index = ((Number) ingredientMap.get("index")).intValue();
-                        Float amount = ((Number) ingredientMap.get("amount")).floatValue();
-                        Long foodstuffId = ((Number) ingredientMap.get("foodstuffId")).longValue();
-                        Ingredient newIngredient = new Ingredient(index, amount, foodstuffId);
-                        newIngredients.add(newIngredient);
+
+                    // remove ingredient if not in updates
+                    Iterator<Ingredient> iterator = recipe.ingredients.iterator();
+                    while (iterator.hasNext()) {
+                        Ingredient existingIngredient = iterator.next();
+                        Boolean ingredientFound = false;
+
+                        for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
+                            if (existingIngredient.foodstuff.id == ((Number) ingredientMap.get("foodstuffId"))
+                                    .intValue()) {
+                                ingredientFound = true;
+                                break;
+                            }
+                        }
+
+                        if (ingredientFound == false) {
+                            Ingredient ingredientToRemove = existingIngredient;
+                            shoppingListResource.removeIngredientFromAllShoppingLists(ingredientToRemove);
+                            iterator.remove();
+                        }
                     }
-                    recipe.setIngredients(newIngredients);
+
+                    for (LinkedHashMap<String, Object> ingredientMap : ingredientsList) {
+                        Boolean existingIngredientFound = false;
+
+                        // patch ingredient if existing
+                        for (Ingredient existingIngredient : recipe.ingredients) {
+                            if (existingIngredient.foodstuff.id == ((Number) ingredientMap.get("foodstuffId"))
+                                    .intValue()) {
+                                ingredientResource.patch(existingIngredient, ingredientMap);
+                                existingIngredientFound = true;
+                            }
+                        }
+
+                        // create new ingredient if not existing
+                        if (existingIngredientFound == false) {
+                            Integer index = ((Number) ingredientMap.get("index")).intValue();
+                            Float amount = ((Number) ingredientMap.get("amount")).floatValue();
+                            Long foodstuffId = ((Number) ingredientMap.get("foodstuffId")).longValue();
+                            Ingredient newIngredient = new Ingredient(index, amount, foodstuffId, recipe);
+                            recipe.ingredients.add(newIngredient);
+                        }
+                    }
                     break;
                 case "steps":
                     List<Step> newSteps = new ArrayList<Step>();

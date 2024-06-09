@@ -11,24 +11,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.acme.Foodstuff.Foodstuff;
 import org.acme.FoodstuffMetaData.UnitEnum;
 import org.acme.Recipe.Recipe;
-import org.acme.ShoppingList.ShoppingList;
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 @Entity
 @Table(uniqueConstraints = {
-// @UniqueConstraint(columnNames = { "index", "recipe_id" }),
-// @UniqueConstraint(columnNames = { "foodstuff_id", "recipe_id" })
+        // @UniqueConstraint(columnNames = { "index", "recipe_id" }),
+        @UniqueConstraint(columnNames = { "foodstuff_id", "recipe_id" })
 })
 public class Ingredient extends PanacheEntity {
     // #region consts
@@ -151,10 +149,12 @@ public class Ingredient extends PanacheEntity {
     public Ingredient(
             final Integer paramIndex,
             final Float paramAmount,
-            final Long paramFoodstuffId) {
+            final Long paramFoodstuffId,
+            final Recipe paramRecipe) {
         this.setIndex(paramIndex);
         this.setAmount(paramAmount);
         this.setFoodstuffId(paramFoodstuffId);
+        this.recipe = paramRecipe;
     }
 
     // #endregion

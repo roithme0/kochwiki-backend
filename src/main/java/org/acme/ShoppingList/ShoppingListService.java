@@ -1,7 +1,7 @@
 package org.acme.ShoppingList;
 
 import java.util.Optional;
-import java.util.List;
+import java.util.Iterator;
 
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
@@ -311,12 +311,13 @@ public class ShoppingListService {
                                                                                 + "' not found"))
                                                 .build();
                         }
-                        List<ShoppingListItemIngredient> itemIngredients = shoppingList.shoppingListItemIngredients;
-                        for (int i = 0; i < itemIngredients.size(); i++) {
-                                ShoppingListItemIngredient itemIngredient = shoppingList.shoppingListItemIngredients
-                                                .get(i);
+                        Iterator<ShoppingListItemIngredient> iterator = shoppingList.shoppingListItemIngredients
+                                        .iterator();
+                        while (iterator.hasNext()) {
+                                ShoppingListItemIngredient itemIngredient = iterator.next();
                                 if (itemIngredient.isChecked == true && itemIngredient.isPinned == false) {
-                                        shoppingList.removeIngredient(itemIngredient);
+                                        iterator.remove();
+                                        itemIngredient.delete();
                                 }
                         }
                         shoppingListResource.persist(shoppingList);
