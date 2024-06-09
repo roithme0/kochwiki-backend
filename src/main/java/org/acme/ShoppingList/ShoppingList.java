@@ -1,19 +1,20 @@
 package org.acme.ShoppingList;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.acme.ShoppingListItem.ShoppingListItemIngredient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -23,9 +24,9 @@ public class ShoppingList extends PanacheEntityBase {
     @Id
     public Long id;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "shoppingList_shoppingListItemIngredient")
-    public Set<ShoppingListItemIngredient> shoppingListItemIngredients = new HashSet<>();
+    @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference("shoppingList-shoppingListItemIngredients")
+    public List<ShoppingListItemIngredient> shoppingListItemIngredients = new ArrayList<>();
 
     // #endregion
 
@@ -33,12 +34,12 @@ public class ShoppingList extends PanacheEntityBase {
 
     public void addIngredient(final ShoppingListItemIngredient newShoppingListItemIngredient) {
         shoppingListItemIngredients.add(newShoppingListItemIngredient);
-        newShoppingListItemIngredient.addShoppingList(this);
+        newShoppingListItemIngredient.shoppingList = this;
     }
 
     public void removeIngredient(final ShoppingListItemIngredient shoppingListItemIngredient) {
         shoppingListItemIngredients.remove(shoppingListItemIngredient);
-        shoppingListItemIngredient.removeShoppingList(this);
+        shoppingListItemIngredient.delete();
     }
 
     // #endregion

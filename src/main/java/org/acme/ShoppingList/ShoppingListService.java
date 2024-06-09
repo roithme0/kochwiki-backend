@@ -2,7 +2,6 @@ package org.acme.ShoppingList;
 
 import java.util.Optional;
 
-import org.acme.CustomUser.CustomUser;
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
 import org.acme.Ingredient.IngredientResource;
@@ -110,9 +109,10 @@ public class ShoppingListService {
                         ShoppingListItemIngredient shoppingListItemIngredient = null;
                         try {
                                 shoppingListItemIngredient = entityManager.createQuery(
-                                                "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient",
+                                                "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient AND shoppingListItemIngredient.shoppingList = :shoppingList",
                                                 ShoppingListItemIngredient.class)
                                                 .setParameter("ingredient", ingredient)
+                                                .setParameter("shoppingList", shoppingList)
                                                 .getSingleResult();
                         } catch (Exception e) {
                                 // ingredient not used in any shopping list
@@ -165,9 +165,10 @@ public class ShoppingListService {
                         ShoppingListItemIngredient shoppingListItemIngredient = null;
                         try {
                                 shoppingListItemIngredient = entityManager.createQuery(
-                                                "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient",
+                                                "SELECT shoppingListItemIngredient FROM ShoppingListItemIngredient shoppingListItemIngredient WHERE shoppingListItemIngredient.ingredient = :ingredient AND shoppingListItemIngredient.shoppingList = :shoppingList",
                                                 ShoppingListItemIngredient.class)
                                                 .setParameter("ingredient", ingredient)
+                                                .setParameter("shoppingList", shoppingList)
                                                 .getSingleResult();
 
                                 shoppingList.removeIngredient(shoppingListItemIngredient);

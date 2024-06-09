@@ -8,17 +8,19 @@ import org.acme.Ingredient.Ingredient;
 import org.acme.ShoppingList.ShoppingList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "ingredient_id", "shoppingList_id" })
+})
 public class ShoppingListItemIngredient extends PanacheEntity implements IShoppingListItem {
     // #region fields
 
@@ -29,19 +31,17 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
     public Boolean isPinned;
 
     @ManyToOne
-    @JoinColumn(unique = true, name = "ingredient_id", nullable = false)
+    @JoinColumn(name = "ingredient_id", nullable = false)
     @JsonBackReference("ingredient-shoppingListItemIngredients")
     public Ingredient ingredient;
 
     @Column(nullable = false)
     public Float amount;
 
-    @ManyToMany(mappedBy = "shoppingListItemIngredients", fetch = FetchType.EAGER)
-    @JsonIgnore
-    public Set<ShoppingList> shoppingLists = new HashSet<>();
-
-    @Column(nullable = true)
-    public Set<Long> shoppingListIds = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "shoppingList_id", nullable = false)
+    @JsonBackReference("shoppingList-shoppingListItemIngredients")
+    public ShoppingList shoppingList;
 
     // #endregion
 
@@ -77,20 +77,6 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
 
     public String getRecipeName() {
         return ingredient.recipe.name;
-    }
-
-    // #endregion
-
-    // #region methods
-
-    public void addShoppingList(final ShoppingList newShoppingList) {
-        shoppingLists.add(newShoppingList);
-        shoppingListIds.add(newShoppingList.id);
-    }
-
-    public void removeShoppingList(final ShoppingList shoppingList) {
-        shoppingLists.remove(shoppingList);
-        shoppingListIds.remove(shoppingList.id);
     }
 
     // #endregion
