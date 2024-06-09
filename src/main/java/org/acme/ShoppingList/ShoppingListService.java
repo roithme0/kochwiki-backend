@@ -289,4 +289,37 @@ public class ShoppingListService {
                                         .build();
                 }
         }
+
+        @PATCH
+        @Transactional
+        @Path("/clearChecked")
+        @Consumes(MediaType.APPLICATION_JSON)
+        public Response clearChecked(Long customUserId) {
+                LOG.info(
+                                "PATCH: clearing checked items of shoppingList ...");
+                try {
+                        ShoppingList shoppingList = shoppingListResource
+                                        .findById(customUserId);
+                        if (shoppingList == null) {
+                                return Response
+                                                .status(Response.Status.NOT_FOUND)
+                                                .entity(new ErrorResponse(Response.Status.NOT_FOUND.getStatusCode(),
+                                                                "ShoppingList for customUser with id '"
+                                                                                + customUserId
+                                                                                + "' not found"))
+                                                .build();
+                        }
+                        shoppingList.shoppingListItemIngredients
+                                        .removeIf(itemIngredient -> itemIngredient.isChecked == true
+                                                        && itemIngredient.isPinned == false);
+                        shoppingListResource.persist(shoppingList);
+                        return Response.ok(shoppingList).build();
+                } catch (Exception e) {
+                        return Response
+                                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                                        .entity(new ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                                                        "Unexpected error: " + e.getMessage()))
+                                        .build();
+                }
+        }
 }
