@@ -3,6 +3,8 @@ package org.acme.CustomUser;
 import java.util.Map;
 
 import org.acme.ErrorResponse.ErrorResponse;
+import org.acme.ShoppingList.ShoppingList;
+import org.acme.ShoppingList.ShoppingListResource;
 import org.jboss.logging.Logger;
 
 import jakarta.inject.Inject;
@@ -18,30 +20,23 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class CustomUserService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(CustomUserService.class);
 
-    /**
-     * Resource to access users.
-     */
     @Inject
     private CustomUserResource userResource;
 
     @Inject
-    EntityManager em;
+    private ShoppingListResource shoppingListResource;
 
-    /**
-     * @param username
-     * @return customUser or error.
-     */
+    @Inject
+    EntityManager entityManager;
+
     @GET
     @Path("/{username}")
     public Response findByUsername(@PathParam("username") final String username) {
         LOG.info("GET: find customUser with username '" + username + "' ...");
         try {
-            CustomUser customUser = em
+            CustomUser customUser = entityManager
                     .createQuery("SELECT customUser FROM CustomUser customUser WHERE customUser.username = :username",
                             CustomUser.class)
                     .setParameter("username", username)
@@ -63,9 +58,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @return list of all users.
-     */
     @GET
     public Response listAll() {
         LOG.info("GET: listing all users ...");
@@ -80,16 +72,14 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param customUser to create.
-     * @return created customUser.
-     */
     @POST
     @Transactional
     public Response create(final CustomUser customUser) {
         LOG.info("POST: creating customUser '" + customUser.username + "' ...");
         try {
             userResource.persist(customUser);
+            ShoppingList shoppingList = new ShoppingList(customUser.id);
+            shoppingListResource.persist(shoppingList);
             return Response.ok(customUser).build();
         } catch (Exception e) {
             return Response
@@ -100,11 +90,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param id      of customUser to update.
-     * @param updates to apply.
-     * @return updated customUser.
-     */
     @PATCH
     @Path("/{id}")
     @Transactional
@@ -130,9 +115,6 @@ public class CustomUserService {
         }
     }
 
-    /**
-     * @param id of customUser to delete.
-     */
     @DELETE
     @Path("/{id}")
     @Transactional

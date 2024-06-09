@@ -17,20 +17,11 @@ import java.util.Map;
 
 @Path("/foodstuffs")
 public class FoodstuffService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(FoodstuffService.class);
 
-    /**
-     * Resource to access foodstuffs.
-     */
     @Inject
     private FoodstuffResource foodstuffResource;
 
-    /**
-     * @return list of all foodstuffs.
-     */
     @GET
     public Response listAll() {
         LOG.info("GET: listing all foodstuffs ...");
@@ -45,10 +36,6 @@ public class FoodstuffService {
         }
     }
 
-    /**
-     * @param id of foodstuff to find.
-     * @return foodstuff with given id.
-     */
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") final Long id) {
@@ -72,10 +59,6 @@ public class FoodstuffService {
         }
     }
 
-    /**
-     * @param foodstuff to create.
-     * @return created foodstuff.
-     */
     @POST
     @Transactional
     public Response create(final Foodstuff foodstuff) {
@@ -92,11 +75,6 @@ public class FoodstuffService {
         }
     }
 
-    /**
-     * @param id      of foodstuff to update.
-     * @param updates to apply.
-     * @return updated foodstuff.
-     */
     @PATCH
     @Path("/{id}")
     @Transactional
@@ -122,11 +100,6 @@ public class FoodstuffService {
         }
     }
 
-    /**
-     * Delete foodstuff with given id.
-     * 
-     * @param id of foodstuff to delete.
-     */
     @DELETE
     @Path("/{id}")
     @Transactional

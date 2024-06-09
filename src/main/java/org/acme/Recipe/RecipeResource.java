@@ -131,6 +131,8 @@ public class RecipeResource implements PanacheRepository<Recipe> {
         return recipe;
     }
 
+    // #region utilities
+
     private Integer updateNutritionalValue(Ingredient ingredient, Integer nutritionalValueOfFoodstuff,
             Integer newNutritionalValueOfRecipe) {
         if (nutritionalValueOfFoodstuff == null || newNutritionalValueOfRecipe == null) {
@@ -176,4 +178,6 @@ public class RecipeResource implements PanacheRepository<Recipe> {
 
         return newNutritionalValueOfRecipe;
     }
+
+    // #endregion
 }

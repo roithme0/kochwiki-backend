@@ -1,25 +1,22 @@
-package org.acme.Step;
+package org.acme.ShoppingListItemMetaData;
 
 import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
-@Path("/steps")
-public class StepService {
-    private static final Logger LOG = Logger.getLogger(StepService.class);
-
-    @Inject
-    private StepResource stepResource;
+@Path("/shopping-list-item-meta-data")
+public class ShoppingListItemMetaDataService {
+    private static final Logger LOG = Logger.getLogger(ShoppingListItemMetaDataService.class);
 
     @GET
-    public Response findAll() {
-        LOG.info("GET: finding all steps ...");
+    @Path("/verbose-names")
+    public Response getVerboseNames() {
+        LOG.info("GET: getting foodstuff verbose names ...");
         try {
-            return Response.ok(stepResource.listAll()).build();
+            return Response.ok(ShoppingListItemMetaData.getVerboseNames()).build();
         } catch (Exception e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

@@ -17,20 +17,11 @@ import jakarta.transaction.Transactional;
 
 @Path("/recipes")
 public class RecipeService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(RecipeService.class);
 
-    /**
-     * Resource to access recipes.
-     */
     @Inject
     private RecipeResource recipeResource;
 
-    /**
-     * @return list of all recipes.
-     */
     @GET
     public Response findAll() {
         LOG.info("GET: finding all recipes ...");
@@ -45,10 +36,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * @param id of recipe to find.
-     * @return recipe with given id.
-     */
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") final Long id) {
@@ -72,10 +59,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * @param recipe to create.
-     * @return created recipe.
-     */
     @POST
     @Transactional
     public Response create(final Recipe recipe) {
@@ -92,11 +75,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * @param id      of recipe to patch.
-     * @param updates to apply.
-     * @return patched recipe.
-     */
     @PATCH
     @Transactional
     @Path("/{id}")
@@ -122,11 +100,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * Delete recipe with given id.
-     * 
-     * @param id of recipe to delete.
-     */
     @DELETE
     @Transactional
     @Path("/{id}")

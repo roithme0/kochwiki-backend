@@ -5,10 +5,6 @@ import java.util.HashMap;
 
 public class FoodstuffMetaData {
 
-    /**
-     * @return Key value pairs of the verbose names and names of the foodstuff
-     *         fields.
-     */
     public static Map<String, String> getVerboseNames() {
         Map<String, String> verboseNames = new HashMap<>();
         verboseNames.put("name", "Name");
@@ -22,9 +18,6 @@ public class FoodstuffMetaData {
         return verboseNames;
     }
 
-    /**
-     * @return Key value pairs of the unit choices verbose names and names.
-     */
     public static Map<String, String> getUnitChoices() {
         Map<String, String> unitChoices = new HashMap<>();
         unitChoices.put("G", "g");

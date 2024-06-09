@@ -1,7 +1,5 @@
 package org.acme.FoodstuffMetaData;
 
-import java.util.Map;
-
 import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
@@ -11,14 +9,8 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/foodstuffs-meta-data")
 public class FoodstuffMetaDataService {
-    /**
-     * Logger for this class.
-     */
     private static final Logger LOG = Logger.getLogger(FoodstuffMetaDataService.class);
 
-    /**
-     * @return verbose names of the foodstuffs
-     */
     @GET
     @Path("/verbose-names")
     public Response getVerboseNames() {
@@ -34,9 +26,6 @@ public class FoodstuffMetaDataService {
         }
     }
 
-    /**
-     * @return unit choices for the foodstuffs
-     */
     @GET
     @Path("/unit-choices")
     public Response getUnitChoices() {

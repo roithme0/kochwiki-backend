@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -26,106 +26,70 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 })
 public class Foodstuff extends PanacheEntity {
 
-    /**
-     * Maximum length of name attribute.
-     */
+    // #region consts
+
     private static final int MAX_LENGTH_NAME = 50;
-    /**
-     * Maximum length of brand attribute.
-     */
     private static final int MAX_LENGTH_BRAND = 100;
-    /**
-     * Maximum length of unit attribute.
-     */
     private static final int MAX_LENGTH_UNIT = 5;
-    /**
-     * Maximum length of kcal attribute.
-     */
     private static final int MAX_LENGTH_KCAL = 3;
-    /**
-     * Maximum length of carbs attribute.
-     */
     private static final int MAX_LENGTH_CARBS = 3;
-    /**
-     * Maximum length of protein attribute.
-     */
     private static final int MAX_LENGTH_PROTEIN = 3;
-    /**
-     * Maximum length of fat attribute.
-     */
     private static final int MAX_LENGTH_FAT = 3;
 
-    /**
-     * Name of the foodstuff.
-     */
+    // #endregion
+
+    // #region fields
+
     @Column(nullable = false, length = MAX_LENGTH_NAME)
     public String name;
 
-    /**
-     * Brand of the foodstuff.
-     */
     @Column(nullable = true, length = MAX_LENGTH_BRAND)
     public String brand;
 
-    /**
-     * Unit of the foodstuff.
-     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = MAX_LENGTH_UNIT)
     public UnitEnum unit;
 
-    /**
-     * Nutritional value of the foodstuff.
-     */
     @Column(nullable = true, length = MAX_LENGTH_KCAL)
     public Integer kcal;
 
-    /**
-     * Nutritional value of the foodstuff.
-     */
     @Column(nullable = true, length = MAX_LENGTH_CARBS)
     public Float carbs;
 
-    /**
-     * Nutritional value of the foodstuff.
-     */
     @Column(nullable = true, length = MAX_LENGTH_PROTEIN)
     public Float protein;
 
-    /**
-     * Nutritional value of the foodstuff.
-     */
     @Column(nullable = true, length = MAX_LENGTH_FAT)
     public Float fat;
 
-    /**
-     * List of ingredients the foodstuff is used in.
-     */
     @OneToMany(mappedBy = "foodstuff", fetch = FetchType.EAGER)
-    @Column(nullable = true)
-    @JsonManagedReference("ingredient-foodstuff")
+    @JsonIgnore
     public List<Ingredient> ingredients = new ArrayList<>();
 
-    /**
-     * @return name of unit of foodstuff.
-     */
+    // #endregion
+
+    // #region getters
+
     public String getUnit() {
         return unit.name();
     }
 
-    /**
-     * @return verbose name of unit of foodstuff.
-     */
     public String getUnitVerbose() {
         return unit.getUnitVerbose();
     }
 
-    /**
-     * Set brand of foodstuff.
-     * If brand is empty, set to null.
-     * 
-     * @param newBrand new brand of foodstuff.
-     */
+    public List<Long> getRecipeIds() {
+        List<Long> recipeIds = new ArrayList<>();
+        for (Ingredient ingredient : ingredients) {
+            recipeIds.add(ingredient.recipe.id);
+        }
+        return recipeIds;
+    }
+
+    // #endregion
+
+    // #region setters
+
     public void setBrand(final String newBrand) {
         if (newBrand == "") {
             brand = null;
@@ -134,11 +98,6 @@ public class Foodstuff extends PanacheEntity {
         brand = newBrand;
     }
 
-    /**
-     * Set unit of foodstuff.
-     * 
-     * @param newUnit new unit of foodstuff.
-     */
     public void setUnit(final String newUnit) {
         try {
             unit = UnitEnum.valueOf(newUnit);
@@ -147,13 +106,6 @@ public class Foodstuff extends PanacheEntity {
         }
     }
 
-    /**
-     * Set kcal of foodstuff.
-     * If kcal is empty, set to null.
-     * Check for invalid values.
-     * 
-     * @param newKcal new kcal of foodstuff.
-     */
     public void setKcal(final Integer newKcal) {
         if (newKcal == null) {
             kcal = null;
@@ -163,13 +115,6 @@ public class Foodstuff extends PanacheEntity {
         kcal = newKcal;
     }
 
-    /**
-     * Set carbs of foodstuff.
-     * If carbs is empty, set to null.
-     * Check for invalid values.
-     * 
-     * @param newCarbs new carbs of foodstuff.
-     */
     public void setCarbs(final Float newCarbs) {
         if (newCarbs == null) {
             carbs = null;
@@ -179,13 +124,6 @@ public class Foodstuff extends PanacheEntity {
         carbs = newCarbs;
     }
 
-    /**
-     * Set protein of foodstuff.
-     * If protein is empty, set to null.
-     * Check for invalid values.
-     * 
-     * @param newProtein new protein of foodstuff.
-     */
     public void setProtein(final Float newProtein) {
         if (newProtein == null) {
             protein = null;
@@ -195,13 +133,6 @@ public class Foodstuff extends PanacheEntity {
         protein = newProtein;
     }
 
-    /**
-     * Set fat of foodstuff.
-     * If fat is empty, set to null.
-     * Check for invalid values.
-     * 
-     * @param newFat new fat of foodstuff.
-     */
     public void setFat(final Float newFat) {
         if (newFat == null) {
             fat = null;
@@ -211,29 +142,9 @@ public class Foodstuff extends PanacheEntity {
         fat = newFat;
     }
 
-    /**
-     * Check new nutritional value.
-     * 
-     * @param newValue New nutritional value.
-     */
-    private void checkNutritionalValue(final float newValue) {
-        final double minValue = 0;
-        final double maxValue = 1000;
+    // #endregion
 
-        if (newValue < minValue || newValue >= maxValue) {
-            throw new IllegalArgumentException(
-                    String.format("Wert muss zwischen %d und %d liegen.", minValue, maxValue));
-        }
-    }
-
-    /**
-     * Add single ingredient to foodstuff.
-     * 
-     * @param newIngredient New ingredient to add.
-     */
-    public void addIngredient(final Ingredient newIngredient) {
-        ingredients.add(newIngredient);
-    }
+    // #region constructors
 
     /**
      * Default constructor for hibernate.
@@ -241,17 +152,6 @@ public class Foodstuff extends PanacheEntity {
     public Foodstuff() {
     }
 
-    /**
-     * Constructor for foodstuff.
-     * 
-     * @param paramName    Name of foodstuff.
-     * @param paramBrand   Brand of foodstuff.
-     * @param paramUnit    Unit of foodstuff.
-     * @param paramKcal    Kcal of foodstuff.
-     * @param paramCarbs   Carbs of foodstuff.
-     * @param paramProtein Protein of foodstuff.
-     * @param paramFat     Fat of foodstuff.
-     */
     public Foodstuff(
             final String paramName,
             final String paramBrand,
@@ -269,9 +169,10 @@ public class Foodstuff extends PanacheEntity {
         this.setFat(paramFat);
     }
 
-    /**
-     * @return String representation of foodstuff.
-     */
+    // #endregion
+
+    // #region equals and hashCode
+
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
@@ -290,11 +191,24 @@ public class Foodstuff extends PanacheEntity {
                 && Objects.equals(fat, foodstuff.fat);
     }
 
-    /**
-     * @return Hash code of foodstuff.
-     */
     @Override
     public int hashCode() {
         return Objects.hash(name, brand, unit, kcal, carbs, protein, fat);
     }
+
+    // #endregion
+
+    // #region utilities
+
+    private void checkNutritionalValue(final float newValue) {
+        final double minValue = 0;
+        final double maxValue = 1000;
+
+        if (newValue < minValue || newValue >= maxValue) {
+            throw new IllegalArgumentException(
+                    String.format("Wert muss zwischen %d und %d liegen.", minValue, maxValue));
+        }
+    }
+
+    // #endregion
 }
