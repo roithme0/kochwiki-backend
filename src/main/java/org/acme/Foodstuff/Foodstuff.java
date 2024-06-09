@@ -78,6 +78,14 @@ public class Foodstuff extends PanacheEntity {
         return unit.getUnitVerbose();
     }
 
+    public List<Long> getRecipeIds() {
+        List<Long> recipeIds = new ArrayList<>();
+        for (Ingredient ingredient : ingredients) {
+            recipeIds.add(ingredient.recipe.id);
+        }
+        return recipeIds;
+    }
+
     // #endregion
 
     // #region setters

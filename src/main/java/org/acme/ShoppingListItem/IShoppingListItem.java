@@ -16,4 +16,6 @@ public interface IShoppingListItem {
     UnitEnum getUnit();
 
     String getUnitVerbose();
+
+    Long getShoppingListId();
 }

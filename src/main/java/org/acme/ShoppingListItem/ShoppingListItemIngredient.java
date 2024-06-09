@@ -79,6 +79,10 @@ public class ShoppingListItemIngredient extends PanacheEntity implements IShoppi
         return ingredient.recipe.name;
     }
 
+    public Long getShoppingListId() {
+        return shoppingList.id;
+    }
+
     // #endregion
 
     // #region constructors
