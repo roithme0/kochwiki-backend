@@ -309,9 +309,11 @@ public class ShoppingListService {
                                                                                 + "' not found"))
                                                 .build();
                         }
-                        shoppingList.shoppingListItemIngredients
-                                        .removeIf(itemIngredient -> itemIngredient.isChecked == true
-                                                        && itemIngredient.isPinned == false);
+                        for (ShoppingListItemIngredient itemIngredient : shoppingList.shoppingListItemIngredients) {
+                                if (itemIngredient.isChecked == true && itemIngredient.isPinned == false) {
+                                        shoppingList.removeIngredient(itemIngredient);
+                                }
+                        }
                         shoppingListResource.persist(shoppingList);
                         return Response.ok(shoppingList).build();
                 } catch (Exception e) {
