@@ -1,6 +1,7 @@
 package org.acme.ShoppingList;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
@@ -310,7 +311,10 @@ public class ShoppingListService {
                                                                                 + "' not found"))
                                                 .build();
                         }
-                        for (ShoppingListItemIngredient itemIngredient : shoppingList.shoppingListItemIngredients) {
+                        List<ShoppingListItemIngredient> itemIngredients = shoppingList.shoppingListItemIngredients;
+                        for (int i = 0; i < itemIngredients.size(); i++) {
+                                ShoppingListItemIngredient itemIngredient = shoppingList.shoppingListItemIngredients
+                                                .get(i);
                                 if (itemIngredient.isChecked == true && itemIngredient.isPinned == false) {
                                         shoppingList.removeIngredient(itemIngredient);
                                 }
