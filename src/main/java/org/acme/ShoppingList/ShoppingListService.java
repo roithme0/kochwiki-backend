@@ -2,7 +2,6 @@ package org.acme.ShoppingList;
 
 import java.util.Optional;
 import java.util.Iterator;
-import java.util.List;
 
 import org.acme.ErrorResponse.ErrorResponse;
 import org.acme.Ingredient.Ingredient;
