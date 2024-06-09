@@ -1,7 +1,5 @@
 package org.acme.FoodstuffMetaData;
 
-import java.util.Map;
-
 import org.acme.ErrorResponse.ErrorResponse;
 import org.jboss.logging.Logger;
 
